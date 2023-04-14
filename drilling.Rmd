@@ -88,8 +88,32 @@ emapper <- data.frame()
 for (file in list.files("emapper/", full.names = TRUE)) {
   name <- substr(file, 10, nchar(file)) %>% gsub("emapper.emapper.annotations", "", .)
   i <- read_tsv(file, show_col_types = F, comment = "##")
-  i <- i %>% rename(query = 1) %>% mutate(genome = name) %>% distinct() %>% select(genome, everything())
+  i <- i %>% rename(query = 1) %>% mutate(genome = name) %>% distinct() %>% select(genome, everything()) %>% mutate(KEGG_ko = gsub("ko:", "", KEGG_ko))
   emapper <- emapper %>% rbind(i)
+}
+
+prokka <- data.frame()
+for (file in list.files("prokka/", full.names = TRUE)) {
+  name <- substr(file, 9, nchar(file)) %>% gsub(".tsv", "", .)
+  i <- read_tsv(file, show_col_types = F, comment = "##")
+  i <- i %>% mutate(genome = name) %>% distinct() %>% 
+    select(genome, everything()) %>% 
+    select(-locus_tag) %>% 
+    rename(ec = EC_number)
+  prokka <- prokka %>% rbind(i)
+}
+
+kegg <- data.frame()
+for (file in list.files("keggmapper/", full.names = TRUE)) {
+  genome <- substr(file, 13, nchar(file)) %>% gsub(".txt", "", .)
+  i <- read_tsv(file, col_names = FALSE, show_col_types = FALSE)
+  i <- i %>% filter(grepl("M00", X1)) %>%
+    mutate(genome = genome) %>%
+    mutate(module = substr(X1, 1, 6)) %>%
+    mutate(completeness = sub(".*\\s", "", X1)) %>%
+    mutate(completeness = gsub(")", "", completeness)) %>%
+    mutate(name = substr(X1, 7, nchar(X1))) %>% select(-X1)
+  kegg <- kegg %>% rbind(i)
 }
 ```
 
@@ -105,22 +129,21 @@ cols.phylum <- c(
   )
 
 # Ranked in order of abundance
-cols <- c(
-  "Patescibacteria" = "#D69C4E",
-  "Desulfobacterota" = "#F2AD00",
-  "Caldatribacteriota" = "#972D15",
-  "Chloroflexota" = "#A2A475",
-  "Acidobacteriota" = "#02401B",
-  "Omnitrophota" = "#00A08A",
-  "Nitrospirota" = "#046C9A",
-  "Campylobacterota" = "#899DA4",
-  "Other" = "#C7B19C",
-  "Unidentified" = "#FAEFD1"
-)
+cols.taxon <- c(
+  "Desulforudis" = "#A2A475",
+  "Desulfitibacter" = "#FAEFD1",
+  "Smithellaceae" = "#02401B",
+  "Coriobacteriia" = "#D69C4E",
+  "Pelotomaculaceae" = "#00A08A",
+  "Dethiosulfatibacteraceae" = "#F2AD00",
+  "Erysipelotrichaceae" = "#046C9A",
+  "Other" = "#899DA4"
+  )
 ```
 
 
 ### Explore community structure base on marker-genes ###
+
 
 ```{r barplot cosc filters phylum}
 i <- c("P28309_1061","P28309_1062","P28309_1063","P28309_1064")
@@ -169,6 +192,8 @@ seqtab %>%
         panel.border = element_rect(size = 1, fill = NA)
         )
 ```
+
+
 ```{r export barplot DNA order}
 ggsave("../figures/barplot-order.pdf", height = 10, width = 16, units = "cm")
 ```
@@ -233,273 +258,13 @@ ggsave("../figures/barplot-order-original.png", height = 10, width = 16, units =
 ```
 
 
-### Pie ###
-
-```{r}
-# Select most abundant taxa from metagenomes
-i <- c("P28309_1061","P28309_1062","P28309_1063",
-       "VK-3516-f1","VK-3516-f3","VK-3516-f5")
-
-tax <- bintax %>% 
-  rename(seqid = genome) %>%
-  rbind(gtdb)
-
-coverm %>%
-  select(sample, seqid = genome, relab = tpm) %>%
-  rbind(seqtab[,c("sample","seqid","relab")]) %>%
-  filter(sample %in% i) %>%
-  left_join(
-    bintax %>% rename(seqid = genome) %>% rbind(gtdb), by = "seqid"
-    ) %>%
-  mutate(phylum = ifelse(!is.na(phylum) & phylum %in% t, phylum, "Other"))
-
-
-  mutate(phylum = ifelse(!is.na(phylum) & !phylum %in% t, phylum, "Other"))
-  group_by(taxon) %>% 
-  summarise(tpm = sum(tpm)) %>% 
-  slice_max(tpm, n = 11) %>%
-  left_join(bintax[,c("taxon","phylum")], by = "taxon") %>%
-  group_by(taxon) %>% add_tally() %>% ungroup() %>% 
-  select(-tpm) %>% distinct() %>%
-  rbind(list(taxon = "Other", phylum = "Other", n = 14))
-
-# Modify the coverm data for merging with marker genes
-i <- coverm %>%
-  inner_join(bintax, by = "genome") %>%
-  mutate(tpm = tpm/10000) %>%
-  mutate(type = "metagenome") %>%
-  select(sample, type, class, family, genus, tpm)
-
-# Merge the metagenomes with marker genes
-i <- seqtab %>%
-  mutate(relab = relab*100) %>%
-  filter(sample %in% c("P28309_1061","P28309_1062","P28309_1063")) %>%
-  inner_join(gtdb, by = "seqid") %>%
-  mutate(type = "marker") %>%
-  select(sample, type, class, family, genus, tpm = relab) %>%
-  rbind(i) %>%
-  mutate(taxon = case_when(
-    genus == "Desulforudis" ~ "Desulforudis",
-    genus == "Desulfitibacter" ~ "Desulfitibacter",
-    family == "Smithellaceae" ~ "Smithellaceae",
-    class == "Coriobacteriia" ~ "Coriobacteriia",
-    family == "Pelotomaculaceae" ~ "Pelotomaculaceae",
-    family == "Dethiosulfatibacteraceae" ~ "Dethiosulfatibacteraceae",
-    family == "Erysipelotrichaceae" ~ "Erysipelotrichaceae",
-    family == "Syntrophomonadaceae" ~ "Syntrophomonadaceae",
-    genus == "Hydrogenophaga" ~ "Hydrogenophaga",
-    genus == "Brevundimonas" ~ "Brevundimonas",
-    genus == "Arachnia" ~ "Arachnia",
-    #class == "Dethiobacteria" ~ "Dethiobacteria",
-    #genus == "Desulfomicrobium" ~ "Desulfomicrobium",
-    #genus == "Bellilinea" ~ "Bellilinea",
-    .default = "Other"
-  )) %>% group_by(sample, type, taxon) %>% summarise(tpm = sum(tpm), .groups = "drop")
-```
-
-```{r, fig.width = 12/2.54}
-cols.taxon <- c(
-  "Firmicutes" = "#A2A475",
-  "Desulfobacterota" = "#02401B",
-  "Actinobacteriota" = "#D69C4E",
-  "Proteobacteria" = "#972D15",
-  #"Chloroflexota" = "#046C9A",
-  "Other" = "#899DA4"
-  )
-
-i %>%
-  left_join(t, by = "taxon") %>%
-  mutate(type = factor(type, levels = c("metagenome","marker"))) %>%
-  ggplot(aes(x = tpm, 
-             y = fct_relevel(taxon, rev(t$taxon)),
-             color = fct_relevel(phylum, names(cols.taxon)), 
-             fill = fct_relevel(phylum, names(cols.taxon))
-             )
-         ) +
-  geom_boxplot(alpha = 0.5) + 
-  scale_x_log10(limits = c(0.1,100), 
-                labels = c(0.1, 1, 10, 100),
-                breaks = c(0.1, 1, 10, 100)) +
-  scale_y_discrete(labels = rev(paste0(t$taxon," (",t$n,")"))) +
-  facet_wrap(~ type,
-             scales = "free_x",
-             labeller = as_labeller(c("metagenome" = "Metagenomes", "marker" = "Marker gene"))) +
-  labs(x = "Relative abundance (%)", y = "") +
-  scale_color_manual(values = cols.taxon) +
-  scale_fill_manual(values = cols.taxon) +
-  theme_tidy(ratio = 2, legend = "bottom") + guides(color = guide_legend(nrow = 2)) +
-  theme(
-    legend.title = element_blank(),
-    legend.key.size = unit(3.5, "mm"),
-    legend.box.margin = margin(),
-    plot.margin = margin(),
-    axis.ticks.y = element_blank(),
-    axis.ticks.length = unit(0.2,"mm"),
-    strip.background = element_blank(),
-    panel.grid.major.x = element_line(linewidth = 0.2, colour = "grey", linetype = "dotted")
-  )
-```
-```{r}
-ggsave("../figures/boxplot.taxa.pdf", width = 12, height = 12, units = "cm")
-```
-
-
-```{r pie meta-g}
-t <- c("Firmicutes","Desulfobacterota","Actinobacteriota","Proteobacteria","Other")
-
-p1 <- coverm %>%
-  inner_join(bintax, by = "genome") %>%
-  mutate(phylum = ifelse(phylum %in% t, phylum, "Other")) %>%
-  group_by(phylum) %>% 
-  summarise(tpm = sum(tpm), .groups = 'drop') %>%
-  ggplot(aes(x = "", 
-             y = tpm / 3, 
-             fill = fct_relevel(phylum,rev(t))
-             )
-         ) +
-  labs() + ggtitle("Metagenomes") +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  geom_label(x = 0.80, y = 440000, label = "88%", show.legend = F, size = 7/.pt, fill = "white", label.size = 0) +
-  coord_polar("y", start = 0) +
-  scale_fill_manual(values = cols.phylum, guide = "none") + theme_void()
-```
-
-
-```{r}
-p2 <- seqtab %>%
-  filter(sample %in% c("P28309_1061","P28309_1062","P28309_1063")) %>%
-  inner_join(gtdb, by = "seqid") %>%
-  mutate(phylum = ifelse(phylum %in% t, phylum, "Other")) %>%
-  group_by(phylum) %>% 
-  summarise(relab = sum(relab), .groups = 'drop') %>%
-  ggplot(aes(x = "", 
-             y = relab / 3, 
-             fill = fct_relevel(phylum,rev(t))
-             )
-         ) +
-  labs(fill = "Phylum") + ggtitle("16S amplicons") +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  geom_label(x = 0.80, y = 0.445, label = "89%", show.legend = F, size = 7/.pt, fill = "white", label.size = 0) +
-  coord_polar("y", start = 0) +
-  theme_void(base_size = 7) + 
-  scale_fill_manual(values = cols.phylum) + guides(fill = guide_legend(reverse = TRUE)) +
-  theme(
-    plot.title = element_text(size = 7, hjust = 0.5),
-    plot.margin = margin(0,0,0,0),
-    legend.key.size = unit(4, "mm"),
-    legend.text = element_text(size = 7),
-    legend.title = element_text(size = 7)) 
-```
-
-
-```{r top genera}
-t <- coverm %>% 
-  inner_join(bintax, by = "genome") %>% 
-  group_by(taxon) %>% 
-  summarise(tpm = sum(tpm)) %>% 
-  slice_max(tpm, n = 7)
-```
-
-```{r}
-cols.taxon <- c(
-  "Desulforudis" = "#A2A475",
-  "Desulfitibacter" = "#FAEFD1",
-  "Smithellaceae" = "#02401B",
-  "Coriobacteriia" = "#D69C4E",
-  "Pelotomaculaceae" = "#00A08A",
-  "Dethiosulfatibacteraceae" = "#F2AD00",
-  "Erysipelotrichaceae" = "#046C9A",
-  "Other" = "#899DA4"
-  )
-
-bintax %>%
-  mutate(taxon = case_when(
-    genus %in% c("Desulforudis","Desulfitibacter") ~ genus,
-    family %in% c("Smithellaceae","Pelotomaculaceae","Dethiosulfatibacteraceae",
-                  "Erysipelotrichaceae") ~ family,
-    class == "Coriobacteriia" ~ class)
-    ) %>%
-  left_join(t, by = "taxon") %>% select(-tpm) %>%
-  replace_na(list("taxon" = "Other")) -> taxref
-
-p3 <- coverm %>%
-  inner_join(taxref, by = "genome") %>%
-  group_by(taxon) %>% 
-  summarise(tpm = sum(tpm), .groups = 'drop') %>%
-  ggplot(aes(x = "", 
-             y = tpm / 3, 
-             fill = fct_relevel(taxon, names(cols.taxon))
-             )
-         ) +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  coord_polar("y", start = 0) +
-  geom_label(x = 0.80, y = 334594.2, label = "67%", show.legend = F, size = 7/.pt, fill = "white", label.size = 0) +
-  scale_fill_manual(values = cols.taxon, guide = "none") +
-  theme_void()
-```
-
-
-```{r}
-gtdb %>%
-  mutate(taxon = case_when(
-    genus %in% c("Desulforudis","Desulfitibacter") ~ genus,
-    family %in% c("Smithellaceae","Pelotomaculaceae","Dethiosulfatibacteraceae",
-                  "Erysipelotrichaceae") ~ family,
-    class == "Coriobacteriia" ~ class)
-    ) %>%
-  left_join(t, by = "taxon") %>% select(-tpm) %>%
-  replace_na(list("taxon" = "Other")) -> taxref
-
-p4 <- seqtab %>%
-  filter(sample %in% c("P28309_1061","P28309_1062","P28309_1063")) %>%
-  inner_join(taxref, by = "seqid") %>%
-  group_by(taxon) %>% 
-  summarise(relab = sum(relab), .groups = 'drop') %>%
-  ggplot(aes(x = "", 
-             y = relab / 3, 
-             fill = fct_relevel(taxon, names(cols.taxon))
-             )
-         ) +
-  labs(fill = "Highest resolution") +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  coord_polar("y", start = 0) +
-  geom_label(x = 0.80, y = 0.2773844, label = "55%", show.legend = F, size = 7/.pt, fill = "white", label.size = 0) +
-  scale_fill_manual(values = cols.taxon) + 
-  guides(fill = guide_legend(reverse = TRUE)) +
-  theme_void()
-```
-
-
-```{r, fig.width = 14/2.53}
-library(patchwork)
-(p1 + p2) / (p3 + p4) & theme_bw() &
-  theme(
-    plot.title = element_text(size = 7, colour = "black", hjust = 0.5),
-    legend.key = element_blank(),
-    legend.key.size = unit(4, "mm"),
-    axis.text = element_blank(),
-    axis.title = element_blank(),
-    axis.line = element_blank(),
-    axis.ticks = element_blank(),
-    legend.title = element_text(size = 7),
-    legend.text = element_text(size = 7),
-    plot.background = element_blank(),
-    panel.grid = element_blank(),
-    panel.background = element_blank(),
-    panel.border = element_blank(),
-    plot.margin = margin()
-  )
-```
-
-```{r export pie}
-ggsave("../figures/pie.pdf", height = 10, width = 12, units = "cm")
-```
-
+### Bar plot ###
 
 ```{r}
 i <- c("VK-3516-f1","VK-3516-f3","VK-3516-f5","P28309_1061","P28309_1062","P28309_1063")
 
 p1 <- coverm %>%
+  # Prepare the data to be merged with the amplicon data
   select(sample, seqid = genome, relab = tpm) %>%
   mutate(relab = relab / 1e6) %>%
   rbind(seqtab[,c("sample","seqid","relab")]) %>%
@@ -526,8 +291,9 @@ p1 <- coverm %>%
            size = 8/.pt, hjust = 0, vjust = 1) +
   annotate("text", x =  2, y = -3.5, label = "Metagenomes", size = 7/.pt) +
   annotate("text", x =  5, y = -3.5, label = "Marker gene (16S)", size = 7/.pt) +
-  guides(fill = guide_legend(nrow = 3))
+  guides(fill = guide_legend(nrow = 3, reverse = TRUE))
 ```
+
 
 ```{r}
 p2 <- coverm %>%
@@ -566,8 +332,9 @@ p2 <- coverm %>%
   annotate("text", x =  5, y = -3.5, label = "Marker gene (16S)", size = 7/.pt) +
   annotate("text", x =  0.55, y = Inf, label = "b", 
            size = 8/.pt, hjust = 0, vjust = 1) +  
-  guides(fill = guide_legend(nrow = 4))
+  guides(fill = guide_legend(nrow = 4, reverse = TRUE))
 ```
+
 
 ```{r}
 library(patchwork)
@@ -584,12 +351,15 @@ p1 + p2 & theme(
   axis.title.y = element_text(margin = margin(0,-2,0,0))
 )
 ```
+
+
 ```{r}
 ggsave("../figures/barplot.pdf", width = 14, height = 10, units = "cm")
 ```
 
 
 ### Visualise stats of genomes ###
+
 
 ```{r}
 i <- c("Firmicutes","Desulfobacterota","Actinobacteriota","Proteobacteria","Other")
@@ -674,8 +444,11 @@ nmds.scores <- vegan::scores(nmds)$sites %>%
   as.data.frame() %>%
   rownames_to_column("sample")
 ```
+
+
 ```{r}
 library(ggtext)
+i <- c("Firmicutes","Desulfobacterota","Actinobacteriota","Proteobacteria","Other")
 
 p3 <- nmds.scores %>%
   rename(genome = sample) %>% inner_join(bintax, by = "genome") %>%
@@ -705,7 +478,6 @@ p3 <- nmds.scores %>%
 ```
 
 
-
 ```{r, fig.width = 18/2.54}
 library(patchwork)
 p1 + p2 + p3 + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a") & 
@@ -723,4 +495,199 @@ ggsave("../figures/binstats.pdf", height = 10, width = 18, units = "cm")
 ```
 
 
+### Heatmap ###
+
+
+```{r pathways}
+i <- prokka %>%
+  mutate(category = case_when(
+    # S red
+    ec == "2.7.7.4" ~ "03: Sulfate adenylyltransferase (sat)", # sat
+    grepl("apr[A-B]", gene) ~ "04: Adenylylsulfate reductase (aprAB)", # aprAB
+    COG %in% c("COG1145","COG0543","COG2221") ~  "05: Anaerobic sulfite reductase (asrABC)", # asrABC
+    gene == "phsA" ~ "06: Thiosulfate reductase (phsA)",
+    # S ox
+    grepl("dsrE", gene) ~ "07: Dissimilatory sulfite reductase (dsrE)",
+    grepl("sox[A,B]", gene) ~ "07: Thiosulfate oxidation (soxAB)", # soxAB: soxCD not present
+    gene == "soeB" ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
+    gene == "sorB" ~ "08: Sulfite dehydrogenase (sorB)",
+    # N metabolism
+    grepl("nif[K,D,H]", gene) ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
+    grepl("nar[G,H,I]", gene) ~ "10: Nitrate reductase (narGHI)", # narGHI
+    grepl("nap[A,B]", gene) ~ "11: Nitrate reductase (napAB)", # napAB
+    gene == "nirD" ~ "12: DNRA (nirD)", # nirD: nirB not present
+    grepl("nrf[A,H]", gene) ~ "13: DNRA (nrfAH)", # nrfAH
+    grepl("nir[K,S]", gene) ~ "14: Nitrite reductase (nirKS)", # nirKS
+    gene == "nosZ" ~ "15: Nitrous-oxide reductase (nosz)", # nosZ
+    # C fixation
+    ec == "1.2.7.4" ~ "16: Wood-Ljungdahl (cooS)", # cooS
+    ec == "4.1.1.39" ~ "17: Reductive pentosa phosphate (rubisco)", # Rubisco
+    ec == "2.7.1.19" ~ "18: Reductive pentosa phosphate (PRK)", # PRK
+    # Organic C
+    ec == "6.2.1.1" ~ "19: Acetyl-CoA synthetase (acsA)", # ACSS
+    ec == "1.1.1.1" ~ "20: Alcohol dehydrogenase (adh)", # Alcohol dehydrogenase
+  )) %>% filter(!is.na(category)) %>%
+  inner_join(bintax, by = "genome") %>%
+  select(category, taxon) %>% mutate(presence = 1) %>%
+  distinct() %>%
+  # Assign a value (0/1) to each combination
+  pivot_wider(names_from = "taxon", values_from = "presence", values_fill = 0) %>%
+  pivot_longer(-1, names_to = "taxon", values_to = "presence")
+```
+
+
+```{r}
+names <- bintax %>%
+  inner_join(coverm, by = "genome") %>%
+  group_by(taxon, phylum) %>% summarise(tpm = sum(tpm)) %>%
+  arrange(desc(tpm)) 
+
+i <- i %>%
+  mutate(order = gsub(": .*", "", category)) %>%
+  mutate(category = substr(category, 5,nchar(category)))
+  
+```
+
+```{r}
+annotation <- names %>%
+  column_to_rownames("taxon") %>%
+  mutate("Abundance (tpm)" = tpm) %>% rename(Phylum = phylum) %>% select(-tpm)
+
+cols <- list(
+  Phylum = c(Firmicutes = "#A2A475", Desulfobacterota = "#02401B", Actinobacteriota = "#D69C4E",
+             Proteobacteria = "#972D15", Bacteroidota = "#046C9A", Chloroflexota = "#00A08A",
+             Methanobacteriota = "#FAEFD1"),
+  "Abundance (tpm)" = c(low = "#C6DBEF", high = "#08519C")
+)
+
+df<- i %>%
+  arrange(order) %>%
+  select(-order) %>%
+  pivot_wider(names_from = "taxon", values_from = "presence", values_fill = 0) %>%
+  column_to_rownames("category")
+
+pheatmap::pheatmap(df[, names$taxon],
+    border_color = "white",
+    cluster_rows = F, cluster_cols = F,
+    legend_breaks = c(0, 1), color = c("#C6DBEF","#08519C"), legend_labels = c("Absent","Present"),
+    fontsize = 7,
+    annotation_col = annotation,
+    annotation_colors = cols
+  )
+```
+
+
+
+
+```{r}
+i %>%
+  ggplot(aes(x = fct_relevel(taxon, names), 
+             y = fct_reorder(category, order, .desc = TRUE), 
+             fill = presence)) +
+  geom_tile(colour = "white") +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  labs(x = "", y = "") +
+  scale_x_discrete(position = "top") + theme_tidy() + coord_equal() +
+  theme(
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    panel.grid.minor = element_line(colour = "white", linewidth = 2)
+  )
+```
+
+
+```{r kegg modules}
+t <- kegg %>%
+  mutate(reference = case_when(
+    module == "M00001" ~ "Glycolysis",
+    module == "M00307" ~ "Pyruvate ox.",
+    module == "M00165" ~ "Calvin cycle",
+    module == "M00596" ~ "Dissimilatory sulfate red.",
+    module == "M00173" ~ "Reductive citrate cycle",
+    module == "M00377" ~ "Reductive acetyl-CoA pathway",
+    module == "M00357" ~ "Methanogenesis",
+    module == "M00175" ~ "Nitrogen fixation",
+    module == "M00531" ~ "Assimilatory nitrate red.",
+    module == "M00530" ~ "Dissimilatory nitrate red.",
+    module == "M00529" ~ "Denitrification",
+    module == "M00804" ~ "Complete nitrification",
+    module == "M00176" ~ "Assimilatory sulfate red."
+  )) %>%
+  filter(!is.na(reference)) %>% # Only keep the modules listed above
+  # Add module to the reference for plotting
+  mutate(reference = paste(module, ": ", reference, sep = "")) %>%
+  # Format the completeness for plotting
+  mutate(genes = gsub("/.*", "", completeness) %>% as.numeric()) %>%
+  mutate(total = gsub(".*/", "", completeness) %>% as.numeric()) %>%
+  mutate(score = case_when(
+    genes == total ~ "Complete",
+    (total - genes) == 1 ~ "Near-complete",
+    .default = "Incomplete"
+  )) %>%
+  select(genome, reference, score) %>%
+  # Assign a value for every genome-module combination
+  pivot_wider(names_from = "reference", values_from = "score") %>%
+  pivot_longer(-1, values_to = "score", names_to = "reference")
+```
+
+
+```{r}
+t %>%
+  # Add taxon names
+  inner_join(bintax, by = "genome") %>%
+  ggplot(aes(x = fct_relevel(taxon, names$taxon), 
+             y = reference, 
+             fill = fct_relevel(score, c("Incomplete", "Near-complete", "Complete")))) +
+  geom_tile(colour = "white") +
+  scale_fill_manual(values = c("Incomplete" = "#D9DAC7",
+                               "Near-complete" = "#A2A475",
+                               "Complete" = "#616246"), na.value = "#D9DAC7") +
+  labs(x = "", y = "", fill = "") +
+  scale_x_discrete(position = "top") + theme_tidy() +
+  theme(
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    panel.grid.minor = element_line(colour = "white", linewidth = 2)
+  )
+```
+
+
+```{r}
+k <- emapper %>%
+  mutate(process = case_when(
+    grepl("ko02030", KEGG_Pathway) ~ "Chemotaxis",
+    grepl("ko02040", KEGG_Pathway) ~ "Flagellar assembly",
+    grepl("ko02024", KEGG_Pathway) ~ "Quorum sensing"
+  )) %>%
+  filter(!is.na(process)) %>%
+  select(genome, process, ko = KEGG_ko) %>%
+  group_by(genome, process) %>% 
+  summarise(n = unique(ko) %>% length(), .groups = "drop") %>%
+  # Assign a value for every genome-module combination
+  pivot_wider(names_from = "process", values_from = "n") %>%
+  pivot_longer(-1, values_to = "n", names_to = "process")
+```
+
+```{r}
+k %>%
+  # Normalize each count to 1
+  mutate(n = n / max(k$n, na.rm = TRUE)) %>%
+  # Add taxon names
+  inner_join(bintax, by = "genome") %>%
+  ggplot(aes(x = fct_relevel(taxon, names$taxon), 
+             y = process, 
+             fill = n
+         )) +
+  geom_tile(colour = "white", height = 0.2) +
+  labs(x = "", y = "", fill = "") +
+  scale_x_discrete(position = "top") + theme_tidy() +
+  theme(
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    panel.grid.minor = element_line(colour = "white", linewidth = 2)
+  )
+```
 

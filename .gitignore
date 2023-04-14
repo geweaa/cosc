@@ -20,3 +20,7 @@ gtdbtk.summary.tsv
 overall_summary.tsv
 smd.txt
 software_versions.yml
+bin
+keggmapper
+prokka
+keggmapper.tsv
