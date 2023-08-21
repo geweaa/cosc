@@ -26,23 +26,59 @@ library(tidyverse)
 
 ```{r themes}
 source("/Users/geweaa/Box Sync/Protocols/theme.R")
+# Ranked in order of abundance
+cols.phylum <- c(
+  "Firmicutes" = "#A2A475",
+  "Desulfobacterota" = "#02401B",
+  "Actinobacteriota" = "#D69C4E",
+  "Proteobacteria" = "#972D15",
+  "Other" = "#899DA4"
+  )
+
+# Ranked in order of abundance
+cols.taxon <- c(
+  "Desulforudis" = "#A2A475",
+  "Desulfitibacter" = "#FAEFD1",
+  "Smithellaceae" = "#02401B",
+  "Coriobacteriia" = "#D69C4E",
+  "Pelotomaculaceae" = "#00A08A",
+  "Dethiosulfatibacteraceae" = "#F2AD00",
+  "Erysipelotrichaceae" = "#046C9A",
+  "Other" = "#899DA4"
+  )
+
+cols.class <- c(
+  "Desulfotomaculia" = "#A2A475",
+  "Moorellia" = "#FAEFD1",
+  "Clostridia" = "#00A08A",
+  "Bacteroidia" = "#02401B",
+  "Bacilli" = "#D69C4E",
+  "Gammaproteobacteria" = "#972D15",
+  "Alphaproteobacteria" = "#046C9A",
+  "Other" = "#899DA4"
+  ) %>% rev()
 ```
 
 
-### Files 16S ###
+### Read input files ###
 
-```{r read input files}
-library(tidyverse)
+
+```{r read input files 16S}
 # GTDB release 207 was used as reference database
 
-seqtab <- read_tsv("ASV_table.tsv", col_types = cols(.default = col_character(), count = col_integer()))
-gtdb <- read_tsv("ASV_tax.tsv", col_types = cols(.default = col_character()))
-meta <- read_tsv("smd.txt", col_types = cols(.default = col_character()))
+seqtab <- read_tsv("ASV_table.tsv", col_types = cols(.default = col_character()))
+gtdb <- read_tsv("ASV_tax_species.tsv", col_types = cols(.default = col_character()))
+
+# The three samples for COSC-2 are 61, 62, and 63, 64 is negative extraction control
+# Each sample contained two filters that were pooled prior to DNA extraction
+# The extraction control contains 43 unique ASVs
+i <- c("P28309_1061","P28309_1062","P28309_1063","P28309_1064")
 
 # Add relative abundances
 seqtab <- seqtab %>%
+  pivot_longer(-1, names_to = "sample", values_to = "count") %>%
   mutate(sample = gsub("_S[0-9].", "", sample)) %>%
-  filter(sample %in% meta$sample) %>%
+  filter(sample %in% i) %>% mutate(count = as.integer(count)) %>% filter(count > 0) %>%
   group_by(sample) %>% 
   mutate(relab = count / sum(count)) %>% 
   ungroup()
@@ -50,7 +86,8 @@ seqtab <- seqtab %>%
 gtdb <- gtdb %>% mutate(taxon = coalesce(genus,family,order,class,phylum,domain)) %>% select(-kingdom)
 ```
 
-### Files metagenomes ###
+
+
 
 ```{r read meta-g}
 # CoverM was used for mapping the trimmed reads to the genomes
@@ -82,12 +119,12 @@ bintax <- read_tsv("gtdbtk.summary.tsv", show_col_types = F) %>%
 ```
 
 
-```{r}
+```{r read files emapper, prokka, and keggmapper}
 emapper <- data.frame()
 
-for (file in list.files("emapper/", full.names = TRUE)) {
-  name <- substr(file, 10, nchar(file)) %>% gsub("emapper.emapper.annotations", "", .)
-  i <- read_tsv(file, show_col_types = F, comment = "##")
+for (file in list.files("emapper/", full.names = TRUE)) { # List all files in the emapper directory
+  name <- substr(file, 10, nchar(file)) %>% gsub("emapper.emapper.annotations", "", .) # Extract the bin ref from the filename
+  i <- read_tsv(file, show_col_types = F, comment = "##") # Read the file
   i <- i %>% rename(query = 1) %>% mutate(genome = name) %>% distinct() %>% select(genome, everything()) %>% mutate(KEGG_ko = gsub("ko:", "", KEGG_ko))
   emapper <- emapper %>% rbind(i)
 }
@@ -117,52 +154,23 @@ for (file in list.files("keggmapper/", full.names = TRUE)) {
 }
 ```
 
+### Extraction control ###
 
-```{r colours}
-# Ranked in order of abundance
-cols.phylum <- c(
-  "Firmicutes" = "#A2A475",
-  "Desulfobacterota" = "#02401B",
-  "Actinobacteriota" = "#D69C4E",
-  "Proteobacteria" = "#972D15",
-  "Other" = "#899DA4"
-  )
-
-# Ranked in order of abundance
-cols.taxon <- c(
-  "Desulforudis" = "#A2A475",
-  "Desulfitibacter" = "#FAEFD1",
-  "Smithellaceae" = "#02401B",
-  "Coriobacteriia" = "#D69C4E",
-  "Pelotomaculaceae" = "#00A08A",
-  "Dethiosulfatibacteraceae" = "#F2AD00",
-  "Erysipelotrichaceae" = "#046C9A",
-  "Other" = "#899DA4"
-  )
-```
-
-
-### Explore community structure base on marker-genes ###
-
-
-```{r barplot cosc filters phylum}
-i <- c("P28309_1061","P28309_1062","P28309_1063","P28309_1064")
-# The cosc filter contains 43 ASVs and 2189 reads
-
+```{r community with control}
 seqtab %>%
   filter(sample %in% i) %>%
   inner_join(gtdb, by = "seqid") %>%
-  group_by(order, sample) %>%
+  group_by(class, sample) %>%
   # Sum the abundance of each phylum within a sample
   summarise(relab = sum(relab), .groups = 'drop_last') %>%
   # Calculate the mean abundance of each phylum over the categories
   summarise(mean_relab = sum(relab), .groups = 'drop') %>%
-  filter(!is.na(order) & order != "uncultured bacterium") %>%
-  top_n(10, mean_relab) -> t
+  filter(!is.na(class)) %>%
+  top_n(7, mean_relab) -> t
 
 gtdb %>%
-  left_join(t %>% transmute(order, topphylum = order), by = "order") %>%
-  mutate(topphylum = if_else(is.na(order), "Unidentified", topphylum)) %>%
+  left_join(t %>% transmute(class, topphylum = class), by = "class") %>%
+  #mutate(topphylum = if_else(is.na(order), "Unidentified", topphylum)) %>%
   replace_na(list("topphylum" = "Other")) -> taxref
 
 seqtab %>%
@@ -174,93 +182,29 @@ seqtab %>%
   # Call the plot
   ggplot(aes(x = fct_relevel(sample, i),
              y = relab * 100, 
-             fill = fct_relevel(topphylum, c("Unidentified","Other"))
+             fill = fct_relevel(topphylum, names(cols.class))
              )
          ) +
-  labs(x = '', y = 'Relative abundance (%)', fill = "Order") +
+  labs(x = '', y = 'Relative abundance (%)', fill = "Phylum") +
   geom_col() +
-  scale_fill_brewer(palette = "Paired") +
+  scale_fill_manual(values = cols.class) +
   annotate("segment", x =  0.55, xend =  3.45, y = 101, yend = 101) +
   annotate("segment", x =  3.55, xend =  4.45, y = 101, yend = 101) +
   annotate('text', x =  2, y = 103, size = 7 / .pt, label = "COSC filters", hjust = 0.5) +
   annotate('text', x =  4, y = 103, size = 7 / .pt, label = "Extraction c.", hjust = 0.5) +
-  theme_barplot(fontsize = 7) + 
-  theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(),
-        axis.ticks.y = element_line(), plot.margin = margin(0,0,0,0),
-        axis.text.y = element_text(face = "bold"),
-        legend.position = "right", legend.title = element_text(face = "bold", size = 7),
-        panel.border = element_rect(size = 1, fill = NA)
-        )
-```
-
-
-```{r export barplot DNA order}
-ggsave("../figures/barplot-order.pdf", height = 10, width = 16, units = "cm")
-```
-
-
-```{r remove ASVs extraction controls}
-seqs <- seqtab %>% filter(sample == "P28309_1064") %>% pull(seqid)
-
-seqtab <- seqtab %>% filter(!seqid %in% i)
-```
-
-
-```{r barplot original biofilm}
-i <- c("P28309_1061","P28309_1062","P28309_1063")
-# The cosc filter contains 43 ASVs and 2189 reads
-
-seqtab %>%
-  filter(sample %in% i) %>%
-  inner_join(gtdb, by = "seqid") %>%
-  group_by(order, sample) %>%
-  # Sum the abundance of each phylum within a sample
-  summarise(relab = sum(relab), .groups = 'drop_last') %>%
-  # Calculate the mean abundance of each phylum over the categories
-  summarise(mean_relab = sum(relab), .groups = 'drop') %>%
-  filter(!is.na(order) & order != "uncultured bacterium") %>%
-  top_n(10, mean_relab) -> t
-
-gtdb %>%
-  left_join(t %>% transmute(order, topphylum = order), by = "order") %>%
-  mutate(topphylum = if_else(is.na(order), "Unidentified", topphylum)) %>%
-  replace_na(list("topphylum" = "Other")) -> taxref
-
-seqtab %>%
-  filter(sample %in% i) %>%
-  inner_join(taxref, by = "seqid") %>%
-  # Summarize in order to have the sum for each category and topphylum
-  group_by(sample, topphylum) %>% 
-  summarise(relab = sum(relab), .groups = 'drop_last') %>%
-  # Call the plot
-  ggplot(aes(x = fct_relevel(sample, i),
-             y = relab * 100, 
-             fill = fct_relevel(topphylum, c("Unidentified","Other"))
-             )
-         ) +
-  labs(x = '', y = 'Relative abundance (%)', fill = "Order") +
-  geom_col() +
-  scale_fill_brewer(palette = "Paired") +
-  annotate("segment", x =  0.55, xend =  3.45, y = 101, yend = 101) +
-  annotate('text', x =  2, y = 103, size = 7 / .pt, label = "COSC filters", hjust = 0.5) +
-  theme_barplot(fontsize = 7) + 
-  theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(),
-        axis.ticks.y = element_line(), plot.margin = margin(0,0,0,0),
-        axis.text.y = element_text(face = "bold"),
-        legend.position = "right", legend.title = element_text(face = "bold", size = 7),
-        panel.border = element_rect(size = 1, fill = NA)
-        )
-```
-
-```{r export barplot DNA phylum}
-ggsave("../figures/barplot-order-original.pdf", height = 10, width = 16, units = "cm")
-ggsave("../figures/barplot-order-original.png", height = 10, width = 16, units = "cm")
+  theme_tidy() + guides(fill = guide_legend(reverse = T)) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.key.height = unit(4, "mm")
+  )
 ```
 
 
 ### Bar plot ###
 
-```{r}
+
+```{r plot community phylum}
 i <- c("VK-3516-f1","VK-3516-f3","VK-3516-f5","P28309_1061","P28309_1062","P28309_1063")
 
 p1 <- coverm %>%
@@ -272,7 +216,7 @@ p1 <- coverm %>%
   left_join(
     bintax %>% rename(seqid = genome) %>% rbind(gtdb), by = "seqid"
     ) %>%
-  mutate(phylum = ifelse(!is.na(phylum) & phylum %in% t, phylum, "Other")) %>%
+  mutate(phylum = ifelse(!is.na(phylum) & phylum %in% names(cols.phylum), phylum, "Other")) %>%
   # Sum abundance within phylum
   group_by(sample, phylum) %>% summarise(relab = sum(relab), .groups = "drop") %>%
   mutate(phylum = factor(phylum, levels = names(cols.phylum))) %>%
@@ -287,15 +231,14 @@ p1 <- coverm %>%
   scale_fill_manual(values = rev(cols.phylum), name = "") +
   annotate("segment", x =  0.55, xend =  3.45, y = -1, yend = -1) +
   annotate("segment", x =  3.55, xend =  6.45, y = -1, yend = -1) +
-  annotate("text", x =  0.55, y = Inf, label = "a", 
-           size = 8/.pt, hjust = 0, vjust = 1) +
+  annotate("text", x =  0.55, y = Inf, label = "bold(a)", 
+           size = 8/.pt, hjust = 0, vjust = 1, parse = TRUE) +
   annotate("text", x =  2, y = -3.5, label = "Metagenomes", size = 7/.pt) +
-  annotate("text", x =  5, y = -3.5, label = "Marker gene (16S)", size = 7/.pt) +
-  guides(fill = guide_legend(nrow = 3, reverse = TRUE))
+  annotate("text", x =  5, y = -3.5, label = "Marker gene (16S)", size = 7/.pt)
 ```
 
 
-```{r}
+```{r plot community highest resolution}
 p2 <- coverm %>%
   select(sample, seqid = genome, relab = tpm) %>%
   mutate(relab = relab / 1e6) %>%
@@ -330,21 +273,22 @@ p2 <- coverm %>%
   annotate("segment", x =  3.55, xend =  6.45, y = -1, yend = -1) +
   annotate("text", x =  2, y = -3.5, label = "Metagenomes", size = 7/.pt) +
   annotate("text", x =  5, y = -3.5, label = "Marker gene (16S)", size = 7/.pt) +
-  annotate("text", x =  0.55, y = Inf, label = "b", 
-           size = 8/.pt, hjust = 0, vjust = 1) +  
-  guides(fill = guide_legend(nrow = 4, reverse = TRUE))
+  annotate("text", x =  0.55, y = Inf, label = "bold(b)", 
+           size = 8/.pt, hjust = 0, vjust = 1, parse = TRUE)
 ```
 
 
-```{r}
+```{r combine both levels, fig.width=12/2.53}
 library(patchwork)
-p1 + p2 & theme(
-  legend.key.size = unit(3.5, "mm"),
+p1 + p2 & guides(fill = guide_legend(ncol = 2, reverse = TRUE)) & 
+  theme(
+  legend.key.height = unit(4, "mm"),
+  #legend.key.size = unit(3.5, "mm"),
   legend.spacing = margin(),
   legend.margin = margin(-12,0,-12,0),
   legend.box.margin = margin(),
   plot.margin = margin(),
-  aspect.ratio = 1,
+  aspect.ratio = 1.5,
   legend.position = "bottom",
   panel.border = element_blank(),
   axis.line = element_line(linewidth = 0.4, colour = "black"),
@@ -353,8 +297,8 @@ p1 + p2 & theme(
 ```
 
 
-```{r}
-ggsave("../figures/barplot.pdf", width = 14, height = 10, units = "cm")
+```{r export community plot phylum}
+ggsave("../figures/barplot.pdf", width = 12, height = 12, units = "cm")
 ```
 
 
@@ -446,7 +390,7 @@ nmds.scores <- vegan::scores(nmds)$sites %>%
 ```
 
 
-```{r}
+```{r plot ordination KOs}
 library(ggtext)
 i <- c("Firmicutes","Desulfobacterota","Actinobacteriota","Proteobacteria","Other")
 
@@ -478,7 +422,7 @@ p3 <- nmds.scores %>%
 ```
 
 
-```{r, fig.width = 18/2.54}
+```{r plot stats on bins, fig.width = 18/2.54}
 library(patchwork)
 p1 + p2 + p3 + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a") & 
   theme(
@@ -505,95 +449,86 @@ i <- prokka %>%
     ec == "2.7.7.4" ~ "03: Sulfate adenylyltransferase (sat)", # sat
     grepl("apr[A-B]", gene) ~ "04: Adenylylsulfate reductase (aprAB)", # aprAB
     COG %in% c("COG1145","COG0543","COG2221") ~  "05: Anaerobic sulfite reductase (asrABC)", # asrABC
-    gene == "phsA" ~ "06: Thiosulfate reductase (phsA)",
+    #gene == "phsA" ~ "06: Thiosulfate reductase (phsA)",
     # S ox
-    grepl("dsrE", gene) ~ "07: Dissimilatory sulfite reductase (dsrE)",
-    grepl("sox[A,B]", gene) ~ "07: Thiosulfate oxidation (soxAB)", # soxAB: soxCD not present
+    #grepl("dsrE", gene) ~ "07: Dissimilatory sulfite reductase (dsrE)",
+    grepl("sox[A,B]", gene) ~ "07: Thiosulfate ox. (soxAB)", # soxAB: soxCD not present
     gene == "soeB" ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
     gene == "sorB" ~ "08: Sulfite dehydrogenase (sorB)",
     # N metabolism
     grepl("nif[K,D,H]", gene) ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
     grepl("nar[G,H,I]", gene) ~ "10: Nitrate reductase (narGHI)", # narGHI
-    grepl("nap[A,B]", gene) ~ "11: Nitrate reductase (napAB)", # napAB
-    gene == "nirD" ~ "12: DNRA (nirD)", # nirD: nirB not present
-    grepl("nrf[A,H]", gene) ~ "13: DNRA (nrfAH)", # nrfAH
-    grepl("nir[K,S]", gene) ~ "14: Nitrite reductase (nirKS)", # nirKS
-    gene == "nosZ" ~ "15: Nitrous-oxide reductase (nosz)", # nosZ
+    #grepl("nap[A,B]", gene) ~ "11: Nitrate reductase (napAB)", # napAB
+    #gene == "nirD" ~ "12: Dissimilatory nitrate red. to ammonium (nirD)", # nirD: nirB not present
+    grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. to ammonium (nrfAH)", # nrfAH
+    #grepl("nir[K,S]", gene) ~ "14: Nitrite reductase (nirKS)", # nirKS
+    #gene == "nosZ" ~ "15: Nitrous-oxide reductase (nosz)", # nosZ
     # C fixation
     ec == "1.2.7.4" ~ "16: Wood-Ljungdahl (cooS)", # cooS
-    ec == "4.1.1.39" ~ "17: Reductive pentosa phosphate (rubisco)", # Rubisco
-    ec == "2.7.1.19" ~ "18: Reductive pentosa phosphate (PRK)", # PRK
+    #ec == "4.1.1.39" ~ "17: Reductive pentose phosphate (rubisco)", # Rubisco
+    ec == "2.7.1.19" ~ "18: Reductive pentose phosphate (PRK)", # PRK
     # Organic C
     ec == "6.2.1.1" ~ "19: Acetyl-CoA synthetase (acsA)", # ACSS
     ec == "1.1.1.1" ~ "20: Alcohol dehydrogenase (adh)", # Alcohol dehydrogenase
-  )) %>% filter(!is.na(category)) %>%
+  )) %>% 
+  filter(!is.na(category)) %>%
   inner_join(bintax, by = "genome") %>%
-  select(category, taxon) %>% mutate(presence = 1) %>%
+  select(category, taxon) %>% mutate(value = 1) %>%
   distinct() %>%
   # Assign a value (0/1) to each combination
-  pivot_wider(names_from = "taxon", values_from = "presence", values_fill = 0) %>%
-  pivot_longer(-1, names_to = "taxon", values_to = "presence")
+  pivot_wider(names_from = "taxon", values_from = "value", values_fill = 0) %>%
+  pivot_longer(-1, names_to = "taxon", values_to = "value") %>%
+  # Add order
+  mutate(order = substr(category, 1, 2)) %>%
+  mutate(category = substr(category, 5, nchar(.))) %>% arrange(order)
 ```
 
 
-```{r}
+```{r order taxa}
+# Taxa are ordered (descending) based on tpm
 names <- bintax %>%
   inner_join(coverm, by = "genome") %>%
   group_by(taxon, phylum) %>% summarise(tpm = sum(tpm)) %>%
-  arrange(desc(tpm)) 
-
-i <- i %>%
-  mutate(order = gsub(": .*", "", category)) %>%
-  mutate(category = substr(category, 5,nchar(category)))
-  
+  arrange(desc(tpm)) %>% pull(taxon)
 ```
 
-```{r}
-annotation <- names %>%
-  column_to_rownames("taxon") %>%
-  mutate("Abundance (tpm)" = tpm) %>% rename(Phylum = phylum) %>% select(-tpm)
-
-cols <- list(
-  Phylum = c(Firmicutes = "#A2A475", Desulfobacterota = "#02401B", Actinobacteriota = "#D69C4E",
-             Proteobacteria = "#972D15", Bacteroidota = "#046C9A", Chloroflexota = "#00A08A",
-             Methanobacteriota = "#FAEFD1"),
-  "Abundance (tpm)" = c(low = "#C6DBEF", high = "#08519C")
-)
-
-df<- i %>%
-  arrange(order) %>%
-  select(-order) %>%
-  pivot_wider(names_from = "taxon", values_from = "presence", values_fill = 0) %>%
-  column_to_rownames("category")
-
-pheatmap::pheatmap(df[, names$taxon],
-    border_color = "white",
-    cluster_rows = F, cluster_cols = F,
-    legend_breaks = c(0, 1), color = c("#C6DBEF","#08519C"), legend_labels = c("Absent","Present"),
-    fontsize = 7,
-    annotation_col = annotation,
-    annotation_colors = cols
-  )
-```
-
-
-
-
-```{r}
-i %>%
-  ggplot(aes(x = fct_relevel(taxon, names), 
-             y = fct_reorder(category, order, .desc = TRUE), 
-             fill = presence)) +
+```{r plot abundance (p1) plus marker genes (p2)}
+p1 <- bintax %>%
+  inner_join(coverm, by = "genome") %>%
+  # Group tpm per taxon and standardize to 1
+  group_by(taxon, phylum) %>% summarise(tpm = sum(tpm)/3e6, .groups = "drop") %>%
+  mutate(taxon = factor(taxon, names)) %>%
+  mutate(Abundance = "Abundance") %>%
+  # Plot
+  ggplot(aes(taxon, Abundance, fill = tpm)) +
   geom_tile(colour = "white") +
-  scale_fill_gradient(low = "white", high = "steelblue") +
-  labs(x = "", y = "") +
-  scale_x_discrete(position = "top") + theme_tidy() + coord_equal() +
+  labs(x = "", y = "", fill = "") +
+  scale_fill_gradient(low = "#C5ECFD", high = "#034968") +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = 0.05) +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(angle = 90, hjust = 0),
     panel.grid.minor = element_line(colour = "white", linewidth = 2)
   )
+
+p2 <- i %>%
+  mutate(taxon = factor(taxon, names)) %>%
+  mutate(category = factor(category, rev(unique(i$category)))) %>%
+  mutate(value = factor(value, levels = c("1", "0"))) %>%
+  # Plot
+  ggplot(aes(taxon, category, fill = value)) +
+  geom_tile(colour = "white") +
+  scale_fill_manual(values = c("1" = "#444431","0" = "#F0F1EB"), labels = c("Present", "Absent")) +
+  labs(x = "", y = "", fill = "") +
+  scale_x_discrete(position = "top") + theme_tidy() +
+  theme(
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.minor = element_line(colour = "white", linewidth = 2)
+  )
+
 ```
 
 
@@ -605,6 +540,8 @@ t <- kegg %>%
     module == "M00165" ~ "Calvin cycle",
     module == "M00596" ~ "Dissimilatory sulfate red.",
     module == "M00173" ~ "Reductive citrate cycle",
+    module == "M00127" ~ "Thiamine biosynthesis (DXP/tyrosine)",
+    module == "M00895" ~ "Thiamine biosynthesis (DXP/glycine)",
     module == "M00377" ~ "Reductive acetyl-CoA pathway",
     module == "M00357" ~ "Methanogenesis",
     module == "M00175" ~ "Nitrogen fixation",
@@ -622,7 +559,7 @@ t <- kegg %>%
   mutate(total = gsub(".*/", "", completeness) %>% as.numeric()) %>%
   mutate(score = case_when(
     genes == total ~ "Complete",
-    (total - genes) == 1 ~ "Near-complete",
+    (total - genes) == 1 ~ "One block missing",
     .default = "Incomplete"
   )) %>%
   select(genome, reference, score) %>%
@@ -632,29 +569,33 @@ t <- kegg %>%
 ```
 
 
-```{r}
-t %>%
+```{r plot kegg modules}
+p3 <- t %>%
+  replace_na(list(score = "Absent")) %>%
   # Add taxon names
   inner_join(bintax, by = "genome") %>%
-  ggplot(aes(x = fct_relevel(taxon, names$taxon), 
-             y = reference, 
-             fill = fct_relevel(score, c("Incomplete", "Near-complete", "Complete")))) +
+  mutate(taxon = factor(taxon, names)) %>%
+  mutate(score = factor(score, levels = c("Complete","One block missing","Incomplete","Absent"))) %>%
+  # Plot
+  ggplot(aes(taxon, reference, fill = score)) +
   geom_tile(colour = "white") +
-  scale_fill_manual(values = c("Incomplete" = "#D9DAC7",
-                               "Near-complete" = "#A2A475",
-                               "Complete" = "#616246"), na.value = "#D9DAC7") +
+  scale_fill_manual(values = c("Complete" = "#444431",
+                               "One block missing" = "#707151",
+                               "Incomplete" = "#B6B79B",
+                               "Absent" = "#F0F1EB"
+                               )) +
   labs(x = "", y = "", fill = "") +
   scale_x_discrete(position = "top") + theme_tidy() +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(angle = 90, hjust = 0),
+    axis.text.x = element_blank(),
     panel.grid.minor = element_line(colour = "white", linewidth = 2)
   )
 ```
 
 
-```{r}
+```{r kegg pathways}
 k <- emapper %>%
   mutate(process = case_when(
     grepl("ko02030", KEGG_Pathway) ~ "Chemotaxis",
@@ -662,32 +603,90 @@ k <- emapper %>%
     grepl("ko02024", KEGG_Pathway) ~ "Quorum sensing"
   )) %>%
   filter(!is.na(process)) %>%
-  select(genome, process, ko = KEGG_ko) %>%
-  group_by(genome, process) %>% 
+  select(genome, reference = process, ko = KEGG_ko) %>%
+  group_by(genome, reference) %>% 
   summarise(n = unique(ko) %>% length(), .groups = "drop") %>%
   # Assign a value for every genome-module combination
-  pivot_wider(names_from = "process", values_from = "n") %>%
-  pivot_longer(-1, values_to = "n", names_to = "process")
+  pivot_wider(names_from = "reference", values_from = "n") %>%
+  pivot_longer(-1, values_to = "n", names_to = "reference") %>%
+  mutate(score = n / max(.$n, na.rm = TRUE)) %>% select(-n) %>%
+  replace_na(list(score = 0))
 ```
 
-```{r}
-k %>%
-  # Normalize each count to 1
-  mutate(n = n / max(k$n, na.rm = TRUE)) %>%
+```{r plot kegg pathways}
+p4 <- k %>%
   # Add taxon names
   inner_join(bintax, by = "genome") %>%
-  ggplot(aes(x = fct_relevel(taxon, names$taxon), 
-             y = process, 
-             fill = n
+  ggplot(aes(x = taxon, 
+             y = reference, 
+             fill = score
          )) +
-  geom_tile(colour = "white", height = 0.2) +
+  geom_tile(colour = "white") +
   labs(x = "", y = "", fill = "") +
-  scale_x_discrete(position = "top") + theme_tidy() +
+  scale_fill_gradient(low = "#C5ECFD", high = "#034968") +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = 0.2) +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(angle = 90, hjust = 0),
+    axis.text.x = element_blank(),
     panel.grid.minor = element_line(colour = "white", linewidth = 2)
   )
+```
+
+
+```{r}
+library(patchwork)
+p1 / p2 / p3 / p4 & theme(plot.margin = margin())
+```
+
+```{r}
+ggsave("heatmap.pdf", width = 20, height = 30, units = "cm")
+```
+
+#### Map ####
+
+```{r}
+# Äspö Lat N 57.4334, Lon E 16.6603) 
+# Use EPSG 3152, unit (m)
+baltic <- list.files("../../Cultures/didactic-spork/data/shapefiles/", pattern = ".shp", full.names = TRUE) %>% lapply(sf::st_read)
+baltic[[3]] <- baltic[[3]] %>% sf::st_transform(3152)
+baltic[[6]] <- baltic[[6]] %>% sf::st_transform(3152)
+baltic[[7]] <- baltic[[7]] %>% sf::st_transform(3152)
+
+ggplot() + # x (longitude), y (latitude)
+  geom_sf(data = baltic[[3]], colour = "black", fill = "white", lwd = 0.02) + # Finland
+  geom_sf(data = baltic[[6]], colour = "black", fill = "white", lwd = 0.02) + # Norway
+  geom_sf(data = baltic[[7]], colour = "black", fill = "white", lwd = 0.02) + # Sweden
+  ggspatial::annotation_scale(location = "br") +
+  annotate("rect", xmin = -126780 - 20000, xmax = -126780 + 20000, ymin = 530561 - 20000, ymax = 530561 + 20000, fill = "black" 
+           ) +
+  annotate("text", x = -126780 + 110000, y = 530561, label = "COSC-2", colour = "black", size = 7/.pt) +
+  #annotate("text", x = 15, y = 59.5, label = "Sweden", colour = "black", size = 7/.pt) +
+  #annotate("text", x = 8.5, y = 61, label = "Norway", colour = "black", size = 7/.pt) +
+  #annotate("text", x = 24, y = 62, label = "Finland", colour = "black", size = 7/.pt) +
+  lims(x = c(-605927.5080410581, 377430.44396114594), y = c(-347315.23941432964, 1172471.3907259274)) +
+  labs(x = "", y = "") + 
+  theme(
+    panel.grid = element_line(colour = "#D9D9D9", linewidth = 0.05),
+    panel.background = element_blank(),
+    axis.text = element_text(size = 7, color = "black"),
+    axis.ticks = element_blank()
+    )
+```
+```{r}
+ggsave("cosc.pdf", width = 10, height = 14, units = "cm")
+```
+
+
+#### 18S - eukaryotes ####
+```{r}
+euk <- read_tsv("eukaryotes/ASV_table.tsv", col_types = cols(.default = col_character(),
+                                                                         count = col_integer())
+                ) %>% filter(sample %in% c("WC-3642-S73-COSC-454F-981R-f1",
+                                           "WC-3642-S74-COSC-454F-981R-f3",
+                                           "WC-3642-S75-COSC-454F-981R-f5"
+                       )) %>% 
+  group_by(sample) %>%
+  mutate(relab = count / sum(count)) %>% ungroup()
 ```
 
