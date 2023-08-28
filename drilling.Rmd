@@ -154,7 +154,7 @@ for (file in list.files("keggmapper/", full.names = TRUE)) {
 }
 ```
 
-### Extraction control ###
+### Extraction control (supplemental) ###
 
 ```{r community with control}
 seqtab %>%
@@ -173,7 +173,7 @@ gtdb %>%
   #mutate(topphylum = if_else(is.na(order), "Unidentified", topphylum)) %>%
   replace_na(list("topphylum" = "Other")) -> taxref
 
-seqtab %>%
+p1 <- seqtab %>%
   filter(sample %in% i) %>%
   inner_join(taxref, by = "seqid") %>%
   # Summarize in order to have the sum for each category and topphylum
@@ -185,19 +185,92 @@ seqtab %>%
              fill = fct_relevel(topphylum, names(cols.class))
              )
          ) +
-  labs(x = '', y = 'Relative abundance (%)', fill = "Phylum") +
+  labs(x = '', y = 'Relative abundance (%)', fill = "Class") +
   geom_col() +
   scale_fill_manual(values = cols.class) +
   annotate("segment", x =  0.55, xend =  3.45, y = 101, yend = 101) +
   annotate("segment", x =  3.55, xend =  4.45, y = 101, yend = 101) +
-  annotate('text', x =  2, y = 103, size = 7 / .pt, label = "COSC filters", hjust = 0.5) +
-  annotate('text', x =  4, y = 103, size = 7 / .pt, label = "Extraction c.", hjust = 0.5) +
-  theme_tidy() + guides(fill = guide_legend(reverse = T)) +
+  annotate('text', x =  2, y = 104, size = 7 / .pt, label = "COSC filters", hjust = 0.5) +
+  annotate('text', x =  4, y = 104, size = 7 / .pt, label = "Extraction c.", hjust = 0.5) +
+  theme_tidy(legend = "bottom") + guides(fill = guide_legend(reverse = T, ncol = 2)) +
   theme(
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     legend.key.height = unit(4, "mm")
   )
+```
+
+```{r nmds with controls}
+meta <- list(sample = c("P28309_1061","P28309_1062","P28309_1063","P28309_1064"),
+     type = c("Sample #1","Sample #2","Sample #3","Neg. ex. control"))
+
+set.seed(999)
+nmds <- seqtab %>% # Full size fraction
+  select(seqid, sample, count) %>% spread(seqid, count, fill = 0) %>%
+  column_to_rownames("sample") %>% vegan::metaMDS()
+
+vegan::scores(nmds)$sites %>%
+  as.data.frame() %>%
+  rownames_to_column("sample") -> nmds.scores
+
+p2 <- nmds.scores %>%
+  inner_join(meta, by = "sample", copy = T) %>%
+  ggplot(aes(NMDS1, NMDS2)) +
+  geom_vline(xintercept = 0, linetype = 'dotted') +
+  geom_hline(yintercept = 0, linetype = 'dotted') +
+  # Points for samples, coloured by nature
+  geom_point(size = 3) +
+  theme_tidy() +
+  ggrepel::geom_label_repel(aes(label = type), color = "black",
+                  size = 7/.pt) +
+  annotate('text', x = Inf, y = -Inf, size = 7/.pt, 
+           label = paste('Stress = ', round(nmds$stress, digits = 2)),
+           hjust = 1.2, vjust = -1,
+           )
+```
+
+
+```{r combine plots with control, fig.width=18/2.53}
+library(patchwork)
+p1 + p2
+```
+
+```{r export control plot}
+ggsave("../figures/control.pdf", width = 14, height = 12, units = "cm")
+```
+
+
+### Field site ###
+
+
+```{r plot scandinavia}
+# Äspö Lat N 57.4334, Lon E 16.6603) 
+baltic <- list.files("../../Cultures/didactic-spork/data/shapefiles/", pattern = ".shp", full.names = TRUE) %>% lapply(sf::st_read)
+# Use EPSG 3152, unit (m)
+baltic[[3]] <- baltic[[3]] %>% sf::st_transform(3152)
+baltic[[6]] <- baltic[[6]] %>% sf::st_transform(3152)
+baltic[[7]] <- baltic[[7]] %>% sf::st_transform(3152)
+
+ggplot() + # x (longitude), y (latitude)
+  geom_sf(data = baltic[[3]], colour = "black", fill = "white", lwd = 0.08) + # Finland
+  geom_sf(data = baltic[[6]], colour = "black", fill = "white", lwd = 0.08) + # Norway
+  geom_sf(data = baltic[[7]], colour = "black", fill = "white", lwd = 0.08) + # Sweden
+  ggspatial::annotation_scale(location = "br") +
+  annotate("rect", xmin = -126780 - 20000, xmax = -126780 + 20000, ymin = 530561 - 20000, ymax = 530561 + 20000, fill = "black" 
+           ) +
+  annotate("text", x = -126780 + 110000, y = 530561, label = "COSC-2", colour = "black", size = 7/.pt) +
+  lims(x = c(-605927, 377430), y = c(-300000, 1172471)) +
+  labs(x = "", y = "") + 
+  theme(
+    panel.grid = element_line(colour = "#D9D9D9", linewidth = 0.4),
+    panel.background = element_blank(),
+    axis.text = element_text(size = 7, color = "black"),
+    axis.ticks = element_blank()
+    )
+```
+
+```{r export map}
+ggsave("../figures/coscmap.png", width = 12, height = 10, units = "cm")
 ```
 
 
@@ -440,6 +513,19 @@ ggsave("../figures/binstats.pdf", height = 10, width = 18, units = "cm")
 
 
 ### Heatmap ###
+```{r order taxa}
+# Taxa are ordered (descending) based on phylum and tpm
+# Only taxa are included with tpm > 10,000 (relative abundance > 1 %)
+# 15 / 23 taxa are included
+
+names <- c("Desulforudis","Desulfitibacter","Pelotomaculaceae","Dethiosulfatibacteraceae",
+           "Erysipelotrichaceae","Syntrophomonadaceae","Dethiobacteria", # Firmicutes
+           "Smithellaceae","Desulfomicrobium", # Desulfobacterota
+           "Hydrogenophaga","Brevundimonas", # Proteobacteria
+           "Coriobacteriia","Arachnia", # Actinobacteriota
+           "Bellilinea", # Chloroflexota
+           "Bacteroidales") # Bacteroidota  
+```
 
 
 ```{r pathways}
@@ -459,6 +545,8 @@ i <- prokka %>%
     grepl("nif[K,D,H]", gene) ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
     grepl("nar[G,H,I]", gene) ~ "10: Nitrate reductase (narGHI)", # narGHI
     #grepl("nap[A,B]", gene) ~ "11: Nitrate reductase (napAB)", # napAB
+    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "11: Hydrogen ox. (hydAB, hoxGK)",
+    ec == "1.12.1.2" ~ "12: NAD-red. hydrogenase (hoxHFUY)",
     #gene == "nirD" ~ "12: Dissimilatory nitrate red. to ammonium (nirD)", # nirD: nirB not present
     grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. to ammonium (nrfAH)", # nrfAH
     #grepl("nir[K,S]", gene) ~ "14: Nitrite reductase (nirKS)", # nirKS
@@ -472,7 +560,8 @@ i <- prokka %>%
     ec == "1.1.1.1" ~ "20: Alcohol dehydrogenase (adh)", # Alcohol dehydrogenase
   )) %>% 
   filter(!is.na(category)) %>%
-  inner_join(bintax, by = "genome") %>%
+  # Selected only the bins from the names object
+  inner_join(bintax, by = "genome") %>% filter(taxon %in% names) %>%
   select(category, taxon) %>% mutate(value = 1) %>%
   distinct() %>%
   # Assign a value (0/1) to each combination
@@ -484,16 +573,10 @@ i <- prokka %>%
 ```
 
 
-```{r order taxa}
-# Taxa are ordered (descending) based on tpm
-names <- bintax %>%
-  inner_join(coverm, by = "genome") %>%
-  group_by(taxon, phylum) %>% summarise(tpm = sum(tpm)) %>%
-  arrange(desc(tpm)) %>% pull(taxon)
-```
-
 ```{r plot abundance (p1) plus marker genes (p2)}
 p1 <- bintax %>%
+  # Use subset of bins
+  filter(taxon %in% names) %>%
   inner_join(coverm, by = "genome") %>%
   # Group tpm per taxon and standardize to 1
   group_by(taxon, phylum) %>% summarise(tpm = sum(tpm)/3e6, .groups = "drop") %>%
@@ -521,7 +604,7 @@ p2 <- i %>%
   geom_tile(colour = "white") +
   scale_fill_manual(values = c("1" = "#444431","0" = "#F0F1EB"), labels = c("Present", "Absent")) +
   labs(x = "", y = "", fill = "") +
-  scale_x_discrete(position = "top") + theme_tidy() +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = .5) +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
@@ -535,21 +618,23 @@ p2 <- i %>%
 ```{r kegg modules}
 t <- kegg %>%
   mutate(reference = case_when(
-    module == "M00001" ~ "Glycolysis",
-    module == "M00307" ~ "Pyruvate ox.",
-    module == "M00165" ~ "Calvin cycle",
+    # S metabolism
     module == "M00596" ~ "Dissimilatory sulfate red.",
-    module == "M00173" ~ "Reductive citrate cycle",
-    module == "M00127" ~ "Thiamine biosynthesis (DXP/tyrosine)",
-    module == "M00895" ~ "Thiamine biosynthesis (DXP/glycine)",
-    module == "M00377" ~ "Reductive acetyl-CoA pathway",
-    module == "M00357" ~ "Methanogenesis",
+    module == "M00176" ~ "Assimilatory sulfate red.",
+    # N metabolism
     module == "M00175" ~ "Nitrogen fixation",
     module == "M00531" ~ "Assimilatory nitrate red.",
-    module == "M00530" ~ "Dissimilatory nitrate red.",
-    module == "M00529" ~ "Denitrification",
-    module == "M00804" ~ "Complete nitrification",
-    module == "M00176" ~ "Assimilatory sulfate red."
+    module == "M00530" ~ "Dissimilatory nitrate red.",    
+    # C fixation
+    module == "M00165" ~ "Calvin cycle",
+    module == "M00166" ~ "Red. PP cycle (R5P>G3P)",
+    module == "M00167" ~ "Red. PP cycle (G3P>R5P)", 
+    module == "M00173" ~ "Reductive citrate cycle",
+    module == "M00377" ~ "Reductive acetyl-CoA pathway",    
+    # C metabolism
+    module == "M00001" ~ "Glycolysis",
+    module == "M00307" ~ "Pyruvate ox.",
+    module == "M00009" ~ "TCA cycle"
   )) %>%
   filter(!is.na(reference)) %>% # Only keep the modules listed above
   # Add module to the reference for plotting
@@ -573,7 +658,9 @@ t <- kegg %>%
 p3 <- t %>%
   replace_na(list(score = "Absent")) %>%
   # Add taxon names
-  inner_join(bintax, by = "genome") %>%
+  inner_join(bintax, by = "genome") %>% 
+  # Use subset of bins
+  filter(taxon %in% names) %>%
   mutate(taxon = factor(taxon, names)) %>%
   mutate(score = factor(score, levels = c("Complete","One block missing","Incomplete","Absent"))) %>%
   # Plot
@@ -585,7 +672,7 @@ p3 <- t %>%
                                "Absent" = "#F0F1EB"
                                )) +
   labs(x = "", y = "", fill = "") +
-  scale_x_discrete(position = "top") + theme_tidy() +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = .5) +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
@@ -616,7 +703,7 @@ k <- emapper %>%
 ```{r plot kegg pathways}
 p4 <- k %>%
   # Add taxon names
-  inner_join(bintax, by = "genome") %>%
+  inner_join(bintax, by = "genome") %>% filter(taxon %in% names) %>%
   ggplot(aes(x = taxon, 
              y = reference, 
              fill = score
@@ -636,11 +723,11 @@ p4 <- k %>%
 
 ```{r}
 library(patchwork)
-p1 / p2 / p3 / p4 & theme(plot.margin = margin())
+p1 / p2 / p3 / p4 & theme(plot.margin = margin(), legend.key.height = unit(4, "mm"))
 ```
 
 ```{r}
-ggsave("heatmap.pdf", width = 20, height = 30, units = "cm")
+ggsave("../figures/heatmap.pdf", width = 18, height = 18, units = "cm")
 ```
 
 #### Map ####
