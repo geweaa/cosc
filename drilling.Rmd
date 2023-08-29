@@ -531,33 +531,26 @@ names <- c("Desulforudis","Desulfitibacter","Pelotomaculaceae","Dethiosulfatibac
 ```{r pathways}
 i <- prokka %>%
   mutate(category = case_when(
-    # S red
+    # S metabolism
     ec == "2.7.7.4" ~ "03: Sulfate adenylyltransferase (sat)", # sat
     grepl("apr[A-B]", gene) ~ "04: Adenylylsulfate reductase (aprAB)", # aprAB
     COG %in% c("COG1145","COG0543","COG2221") ~  "05: Anaerobic sulfite reductase (asrABC)", # asrABC
-    #gene == "phsA" ~ "06: Thiosulfate reductase (phsA)",
-    # S ox
-    #grepl("dsrE", gene) ~ "07: Dissimilatory sulfite reductase (dsrE)",
     grepl("sox[A,B]", gene) ~ "07: Thiosulfate ox. (soxAB)", # soxAB: soxCD not present
     gene == "soeB" ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
     gene == "sorB" ~ "08: Sulfite dehydrogenase (sorB)",
     # N metabolism
     grepl("nif[K,D,H]", gene) ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
     grepl("nar[G,H,I]", gene) ~ "10: Nitrate reductase (narGHI)", # narGHI
-    #grepl("nap[A,B]", gene) ~ "11: Nitrate reductase (napAB)", # napAB
-    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "11: Hydrogen ox. (hydAB, hoxGK)",
-    ec == "1.12.1.2" ~ "12: NAD-red. hydrogenase (hoxHFUY)",
-    #gene == "nirD" ~ "12: Dissimilatory nitrate red. to ammonium (nirD)", # nirD: nirB not present
-    grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. to ammonium (nrfAH)", # nrfAH
-    #grepl("nir[K,S]", gene) ~ "14: Nitrite reductase (nirKS)", # nirKS
-    #gene == "nosZ" ~ "15: Nitrous-oxide reductase (nosz)", # nosZ
+    grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. (nrfAH)", # nrfAH
     # C fixation
     ec == "1.2.7.4" ~ "16: Wood-Ljungdahl (cooS)", # cooS
-    #ec == "4.1.1.39" ~ "17: Reductive pentose phosphate (rubisco)", # Rubisco
     ec == "2.7.1.19" ~ "18: Reductive pentose phosphate (PRK)", # PRK
     # Organic C
     ec == "6.2.1.1" ~ "19: Acetyl-CoA synthetase (acsA)", # ACSS
     ec == "1.1.1.1" ~ "20: Alcohol dehydrogenase (adh)", # Alcohol dehydrogenase
+    # H2 metabolism
+    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "21: Hydrogen ox. (hydAB, hoxGK)",
+    ec == "1.12.1.2" ~ "22: NAD-red. hydrogenase (hoxHFUY)"    
   )) %>% 
   filter(!is.na(category)) %>%
   # Selected only the bins from the names object
@@ -587,7 +580,7 @@ p1 <- bintax %>%
   geom_tile(colour = "white") +
   labs(x = "", y = "", fill = "") +
   scale_fill_gradient(low = "#C5ECFD", high = "#034968") +
-  scale_x_discrete(position = "top") + theme_tidy(ratio = 0.05) +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = NULL) + coord_equal() +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
@@ -604,14 +597,14 @@ p2 <- i %>%
   geom_tile(colour = "white") +
   scale_fill_manual(values = c("1" = "#444431","0" = "#F0F1EB"), labels = c("Present", "Absent")) +
   labs(x = "", y = "", fill = "") +
-  scale_x_discrete(position = "top") + theme_tidy(ratio = .5) +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = NULL) + coord_equal() +
   theme(
+    plot.margin = margin(),
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_blank(),
     panel.grid.minor = element_line(colour = "white", linewidth = 2)
   )
-
 ```
 
 
@@ -630,7 +623,7 @@ t <- kegg %>%
     module == "M00166" ~ "Red. PP cycle (R5P>G3P)",
     module == "M00167" ~ "Red. PP cycle (G3P>R5P)", 
     module == "M00173" ~ "Reductive citrate cycle",
-    module == "M00377" ~ "Reductive acetyl-CoA pathway",    
+    module == "M00377" ~ "Red. acetyl-CoA pathway",    
     # C metabolism
     module == "M00001" ~ "Glycolysis",
     module == "M00307" ~ "Pyruvate ox.",
@@ -655,6 +648,21 @@ t <- kegg %>%
 
 
 ```{r plot kegg modules}
+i <- c("M00596: Dissimilatory sulfate red.",
+       "M00176: Assimilatory sulfate red.",
+       "M00175: Nitrogen fixation",
+       "M00531: Assimilatory nitrate red.",
+       "M00530: Dissimilatory nitrate red.",
+       "M00165: Calvin cycle",
+       "M00166: Red. PP cycle (R5P>G3P)",
+       "M00167: Red. PP cycle (G3P>R5P)", 
+       "M00173: Reductive citrate cycle",
+       "M00377: Red. acetyl-CoA pathway",
+       "M00001: Glycolysis",
+       "M00307: Pyruvate ox.",
+       "M00009: TCA cycle"
+       ) %>% rev()
+
 p3 <- t %>%
   replace_na(list(score = "Absent")) %>%
   # Add taxon names
@@ -664,7 +672,9 @@ p3 <- t %>%
   mutate(taxon = factor(taxon, names)) %>%
   mutate(score = factor(score, levels = c("Complete","One block missing","Incomplete","Absent"))) %>%
   # Plot
-  ggplot(aes(taxon, reference, fill = score)) +
+  ggplot(aes(taxon, 
+             fct_relevel(reference, i), 
+             fill = score)) +
   geom_tile(colour = "white") +
   scale_fill_manual(values = c("Complete" = "#444431",
                                "One block missing" = "#707151",
@@ -672,8 +682,9 @@ p3 <- t %>%
                                "Absent" = "#F0F1EB"
                                )) +
   labs(x = "", y = "", fill = "") +
-  scale_x_discrete(position = "top") + theme_tidy(ratio = .5) +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = NULL) + coord_equal() +
   theme(
+    plot.margin = margin(),
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_blank(),
@@ -700,7 +711,10 @@ k <- emapper %>%
   replace_na(list(score = 0))
 ```
 
+
 ```{r plot kegg pathways}
+# Aspect ratio is y / x 
+
 p4 <- k %>%
   # Add taxon names
   inner_join(bintax, by = "genome") %>% filter(taxon %in% names) %>%
@@ -710,8 +724,8 @@ p4 <- k %>%
          )) +
   geom_tile(colour = "white") +
   labs(x = "", y = "", fill = "") +
-  scale_fill_gradient(low = "#C5ECFD", high = "#034968") +
-  scale_x_discrete(position = "top") + theme_tidy(ratio = 0.2) +
+  scale_fill_gradient(low = "#C5ECFD", high = "#034968", guide = "none") +
+  scale_x_discrete(position = "top") + theme_tidy(ratio = NULL) + coord_equal() +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
@@ -721,13 +735,15 @@ p4 <- k %>%
 ```
 
 
-```{r}
+```{r, fig.width=16/2.53}
 library(patchwork)
-p1 / p2 / p3 / p4 & theme(plot.margin = margin(), legend.key.height = unit(4, "mm"))
+p1 / p2 / p3 / p4 + plot_layout(guides = "collect") & 
+  theme(plot.margin = margin(), 
+        legend.key.height = unit(4, "mm"))
 ```
 
 ```{r}
-ggsave("../figures/heatmap.pdf", width = 18, height = 18, units = "cm")
+ggsave("../figures/heatmap.pdf", width = 16, height = 18, units = "cm")
 ```
 
 #### Map ####
