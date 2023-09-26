@@ -57,10 +57,20 @@ cols.class <- c(
   "Alphaproteobacteria" = "#046C9A",
   "Other" = "#899DA4"
   ) %>% rev()
+
+cols.euk <- c(
+  "Metazoa" = "#A2A475",
+  "Ochrophyta" = "#FAEFD1",
+  "Chlorophyta" = "#00A08A",
+  "Dinoflagellata" = "#02401B",
+  "Cercozoa" = "#972D15",
+  "Fungi" = "#046C9A",
+  "Other" = "#899DA4"
+) %>% rev()
 ```
 
 
-### Read input files ###
+# Read input files
 
 
 ```{r read input files 16S}
@@ -78,10 +88,15 @@ i <- c("P28309_1061","P28309_1062","P28309_1063","P28309_1064")
 seqtab <- seqtab %>%
   pivot_longer(-1, names_to = "sample", values_to = "count") %>%
   mutate(sample = gsub("_S[0-9].", "", sample)) %>%
-  filter(sample %in% i) %>% mutate(count = as.integer(count)) %>% filter(count > 0) %>%
+  filter(sample %in% i) %>% 
+  mutate(count = as.integer(count)) %>% 
+  filter(count > 0) %>%
   group_by(sample) %>% 
   mutate(relab = count / sum(count)) %>% 
   ungroup()
+
+# Extract the ASVs from the extraction control
+c <- seqtab %>% filter(sample == "P28309_1064") %>% pull(seqid)
 
 gtdb <- gtdb %>% mutate(taxon = coalesce(genus,family,order,class,phylum,domain)) %>% select(-kingdom)
 ```
@@ -111,7 +126,7 @@ bintax <- read_tsv("gtdbtk.summary.tsv", show_col_types = F) %>%
            into = c("domain","phylum","class","order","family","genus","species"), 
            sep = ";", fill = "right") %>%
   mutate(across(everything(), na_if, "")) %>%
-  mutate(across(-1, gsub, pattern = "_[A-Z]", replacement = "")) %>%
+  mutate(across(-1, \(x) gsub(x, pattern = "_[A-Z]", replacement = ""))) %>%
   filter(genome %in% coverm$genome) %>% distinct() %>%
   # Remove placeholder names
   mutate(across(2:8, \(x) ifelse(grepl("[0-9]", x), NA, x))) %>%
@@ -154,7 +169,7 @@ for (file in list.files("keggmapper/", full.names = TRUE)) {
 }
 ```
 
-### Extraction control (supplemental) ###
+# Extraction control (supplemental)
 
 ```{r community with control}
 seqtab %>%
@@ -239,9 +254,7 @@ p1 + p2
 ggsave("../figures/control.pdf", width = 14, height = 12, units = "cm")
 ```
 
-
-### Field site ###
-
+# Field site
 
 ```{r plot scandinavia}
 # Äspö Lat N 57.4334, Lon E 16.6603) 
@@ -274,7 +287,7 @@ ggsave("../figures/coscmap.png", width = 12, height = 10, units = "cm")
 ```
 
 
-### Bar plot ###
+# Bar plot
 
 
 ```{r plot community phylum}
@@ -341,7 +354,12 @@ p2 <- coverm %>%
         axis.ticks.y = element_blank()
         ) +
   labs(x = "", y = "") +
-  scale_fill_manual(values = cols.taxon, name = "") +
+  scale_fill_manual(values = cols.taxon, name = "", 
+                    labels = c("Other","Erysipelotrichaceae(f)",
+                               "Dethiosulfatibacteraceae (f)","Pelotomaculaceae (f)",
+                               "Coriobacteriia (c)","Smithellaceae (f)", 
+                               "Desulfitibacter (g)","D. audaxviator (s)"
+                               )) +
   annotate("segment", x =  0.55, xend =  3.45, y = -1, yend = -1) +
   annotate("segment", x =  3.55, xend =  6.45, y = -1, yend = -1) +
   annotate("text", x =  2, y = -3.5, label = "Metagenomes", size = 7/.pt) +
@@ -351,12 +369,11 @@ p2 <- coverm %>%
 ```
 
 
-```{r combine both levels, fig.width=12/2.53}
+```{r combine both levels, fig.width=18/2.53}
 library(patchwork)
-p1 + p2 & guides(fill = guide_legend(ncol = 2, reverse = TRUE)) & 
+p1 + p2 + p3 & guides(fill = guide_legend(ncol = 2, reverse = TRUE)) & 
   theme(
   legend.key.height = unit(4, "mm"),
-  #legend.key.size = unit(3.5, "mm"),
   legend.spacing = margin(),
   legend.margin = margin(-12,0,-12,0),
   legend.box.margin = margin(),
@@ -371,11 +388,11 @@ p1 + p2 & guides(fill = guide_legend(ncol = 2, reverse = TRUE)) &
 
 
 ```{r export community plot phylum}
-ggsave("../figures/barplot.pdf", width = 12, height = 12, units = "cm")
+ggsave("../figures/barplot_euk.pdf", width = 18, height = 12, units = "cm")
 ```
 
 
-### Visualise stats of genomes ###
+# Visualise stats of genomes (Fig. 3)
 
 
 ```{r}
@@ -441,7 +458,7 @@ p2 <- checkm %>%
     panel.border = element_blank(),
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
-    legend.key.size = unit(4, "mm"),
+    legend.key.height = unit(4, "mm"),
     axis.title.y = element_text(margin = margin()),
     plot.margin = margin()
   )
@@ -487,6 +504,10 @@ p3 <- nmds.scores %>%
            label = "Methanobacteriota", 
            size = 7/.pt, hjust = 0, label.color = "#899DA4", 
            label.padding = unit(c(0.1,0.1,0.1,0.1), "lines")) +
+  annotate("richtext", x = -4.5, y = -2.57, 
+           label = "Bradyrhizobium", 
+           size = 7/.pt, hjust = 0, label.color = "#972D15", 
+           label.padding = unit(c(0.1,0.1,0.1,0.1), "lines")) +
   theme(
     axis.title.y = element_text(margin = margin()),
     panel.background = element_blank(),
@@ -499,8 +520,8 @@ p3 <- nmds.scores %>%
 library(patchwork)
 p1 + p2 + p3 + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a") & 
   theme(
-    plot.tag.position = c(0.1, 1.05),
-    plot.tag = element_text(size = 7, colour = "black"),
+    plot.tag.position = c(0.15, 1.05),
+    plot.tag = element_text(size = 8, colour = "black", face = "bold"),
     legend.position = "bottom",
     plot.margin = margin(),
     plot.background = element_blank())
@@ -512,75 +533,164 @@ ggsave("../figures/binstats.pdf", height = 10, width = 18, units = "cm")
 ```
 
 
-### Heatmap ###
+# Heatmap
+
 ```{r order taxa}
 # Taxa are ordered (descending) based on phylum and tpm
 # Only taxa are included with tpm > 10,000 (relative abundance > 1 %)
-# 15 / 23 taxa are included
-
-names <- c("Desulforudis","Desulfitibacter","Pelotomaculaceae","Dethiosulfatibacteraceae",
-           "Erysipelotrichaceae","Syntrophomonadaceae","Dethiobacteria", # Firmicutes
-           "Smithellaceae","Desulfomicrobium", # Desulfobacterota
-           "Hydrogenophaga","Brevundimonas", # Proteobacteria
-           "Coriobacteriia","Arachnia", # Actinobacteriota
-           "Bellilinea", # Chloroflexota
-           "Bacteroidales") # Bacteroidota  
+# 14 / 27 genomes are included
+names <- coverm %>% 
+  group_by(genome) %>% summarise(tpm = sum(tpm)) %>% 
+  filter(tpm > 10000) %>% inner_join(bintax, by = "genome") %>%
+  arrange(desc(tpm)) %>% pull(genome)
 ```
 
 
-```{r pathways}
-i <- prokka %>%
+```{r multiple gene copies}
+emapper %>%
+  rename(ec = EC, gene = Preferred_name) %>%
+  #select(genome, ec = EC, gene = Preferred_name) %>%
+  mutate(category = case_when(
+    # S metabolism
+    ec == "2.7.7.4"  ~ "03: Sulfate adenylyltransferase (sat)", # sat
+    grepl("apr[A,B]", gene) ~ "04: Adenylylsulfate reductase (aprAB)", # aprAB
+    grepl("asr[A-C]", gene) ~  "05: Anaerobic sulfite reductase (asrABC)", # asrABC
+    grepl("sox[A,B]", gene) ~ "07: Thiosulfate ox. (soxAB)", # soxAB: soxCD not present
+    grepl("soeB", gene) ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
+    grepl("sorB", gene) ~ "08: Sulfite dehydrogenase (sorB)",
+    # N metabolism
+    grepl("nif[K,D,H]", gene) ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
+    grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. (nrfAH)", # nrfAH
+    # C fixation
+    grepl("1.2.7.4", ec) ~ "16: CO dehydrogenase (cooS)", # cooS
+    ec == "4.1.1.39" ~ "18: RuBisCO", # PRK
+    ec == "2.7.1.19" ~ "19: Phosphoribulokinase (cfxP)",
+    grepl("1.17.1.10", ec) ~ "21: Formate dehydrogenase (fdhABF)",
+    # H2 metabolism
+    grepl("1.12.1.2", ec) ~ "22: NAD-reducing hydrogenase (hoxfHY)",
+    grepl("1.12.99.6", ec) ~ "23: NiFe hydrogenase (hydAB, hoxGK)",
+    grepl("1.12.2.1", ec) ~ "23: NiFe hydrogenase (hydAB, hoxGK)",
+    grepl("1.12.7.2", ec) ~ "23: NiFe hydrogenase (hydAB, hoxGK)" 
+  )) %>% 
+  # Remove genes outside of above selection
+  filter(!is.na(category)) %>%
+  group_by(genome,gene) %>% summarise(n = n()) %>%
+  inner_join(bintax, by = "genome") %>% filter(genome %in% names & n > 1) %>%
+  select(taxon, gene, n, genome)
+```
+
+
+
+
+```{r marker genes - eggnog}
+mg <- emapper %>%
+  rename(ec = EC, gene = Preferred_name) %>%
+  #select(genome, ec = EC, gene = Preferred_name) %>%
+  mutate(category = case_when(
+    # S metabolism
+    ec == "2.7.7.4"  ~ "03: Sulfate adenylyltransferase (sat)", # sat
+    grepl("apr[A,B]", gene) ~ "04: Adenylylsulfate reductase (aprAB)", # aprAB
+    grepl("asr[A-C]", gene) ~  "05: Anaerobic sulfite reductase (asrABC)", # asrABC
+    grepl("sox[A,B]", gene) ~ "07: Thiosulfate ox. (soxAB)", # soxAB: soxCD not present
+    grepl("soeB", gene) ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
+    grepl("sorB", gene) ~ "08: Sulfite dehydrogenase (sorB)",
+    # N metabolism
+    grepl("nif[K,D,H]", gene) ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
+    grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. (nrfAH)", # nrfAH
+    # C fixation
+    ec ==  "1.2.7.4" ~ "16: CO dehydrogenase (cooS)", # WL pathway 
+    ec =="2.3.1.169" ~ "17: Acetyl-CoA synthase (acs)", # WL pathway 
+    ec == "4.1.1.39" ~ "18: RuBisCO", # Calvin cycle
+    ec =="4.2.1.120" ~ "19: 4-hydroxybutyryl-CoA dehydratase (abfD)",
+    ec == "6.4.1.3"  ~ "20: propionyl-CoA carboxylase (pccB)", # 3-Hydroxypropionate bi-cycle
+    # H2 metabolism
+    grepl("1.12.1.2", ec) ~ "22: NAD-reducing hydrogenase (hoxfHY)",
+    grepl("1.12.99.6", ec) ~ "23: NiFe hydrogenase (hydAB, hoxGK)",
+    grepl("1.12.2.1", ec) ~ "23: NiFe hydrogenase (hydAB, hoxGK)",
+    grepl("1.12.7.2", ec) ~ "23: NiFe hydrogenase (hydAB, hoxGK)" 
+  )) %>% 
+  # Remove genes outside of above selection
+  filter(!is.na(category)) %>%
+  inner_join(bintax, by = "genome") %>% filter(genome %in% names) %>%
+  select(category, genome) %>% mutate(value = 1)
+```
+
+
+```{r marker genes - prokka}
+# Key gene(s) for pathways
+# M00376 3-Hydroxypropionate bi-cycle: EC:6.4.1.3 propionyl-CoA carboxylase
+# M00375 Hydroxypropionate-hydroxybutylate cycle: EC:4.2.1.120 4-hydroxybutyryl-CoA dehydratase
+# M00374 Dicarboxylate-hydroxybutyrate cycle: EC:4.2.1.120 4-hydroxybutyryl-CoA dehydratase
+
+# Check for multiple gene copies
+mg <- prokka %>%
   mutate(category = case_when(
     # S metabolism
     ec == "2.7.7.4" ~ "03: Sulfate adenylyltransferase (sat)", # sat
-    grepl("apr[A-B]", gene) ~ "04: Adenylylsulfate reductase (aprAB)", # aprAB
-    COG %in% c("COG1145","COG0543","COG2221") ~  "05: Anaerobic sulfite reductase (asrABC)", # asrABC
+    grepl("apr[A,B]", gene) ~ "04: Adenylylsulfate reductase (aprAB)", # aprAB
+    grepl("asr[A-C]", gene) ~  "05: Anaerobic sulfite reductase (asrABC)", # asrABC
     grepl("sox[A,B]", gene) ~ "07: Thiosulfate ox. (soxAB)", # soxAB: soxCD not present
     gene == "soeB" ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
     gene == "sorB" ~ "08: Sulfite dehydrogenase (sorB)",
     # N metabolism
     grepl("nif[K,D,H]", gene) ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
-    grepl("nar[G,H,I]", gene) ~ "10: Nitrate reductase (narGHI)", # narGHI
     grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. (nrfAH)", # nrfAH
     # C fixation
-    ec == "1.2.7.4" ~ "16: Wood-Ljungdahl (cooS)", # cooS
-    ec == "2.7.1.19" ~ "18: Reductive pentose phosphate (PRK)", # PRK
-    # Organic C
-    ec == "6.2.1.1" ~ "19: Acetyl-CoA synthetase (acsA)", # ACSS
-    ec == "1.1.1.1" ~ "20: Alcohol dehydrogenase (adh)", # Alcohol dehydrogenase
+    ec ==  "1.2.7.4" ~ "16: CO dehydrogenase (cooS)", # WL pathway 
+    ec =="2.3.1.169" ~ "17: Acetyl-CoA synthase (acs)", # WL pathway 
+    ec == "4.1.1.39" ~ "18: RuBisCO", # Calvin cycle
+    ec =="4.2.1.120" ~ "19: 4-hydroxybutyryl-CoA dehydratase (abfD)",
+    ec == "6.4.1.3"  ~ "20: propionyl-CoA carboxylase (pccB)", # 3-Hydroxypropionate bi-cycle
     # H2 metabolism
-    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "21: Hydrogen ox. (hydAB, hoxGK)",
-    ec == "1.12.1.2" ~ "22: NAD-red. hydrogenase (hoxHFUY)"    
-  )) %>% 
+    ec == "1.12.1.2" ~ "22: NAD-reducing hydrogenase (hoxfHY)",
+    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "23: NiFe hydrogenase (hydAB, hoxGK)"
+  )) %>%
+  # Remove genes outside of above selection
   filter(!is.na(category)) %>%
   # Selected only the bins from the names object
-  inner_join(bintax, by = "genome") %>% filter(taxon %in% names) %>%
-  select(category, taxon) %>% mutate(value = 1) %>%
+  inner_join(bintax, by = "genome") %>% filter(genome %in% names) %>%
+  select(category, genome) %>% mutate(value = 1) %>%
+  # Add Eggnog mapper query
+  rbind(mg) %>%
   distinct() %>%
   # Assign a value (0/1) to each combination
-  pivot_wider(names_from = "taxon", values_from = "value", values_fill = 0) %>%
-  pivot_longer(-1, names_to = "taxon", values_to = "value") %>%
+  pivot_wider(names_from = "genome", values_from = "value", values_fill = 0) %>%
+  pivot_longer(-1, names_to = "genome", values_to = "value") %>%
   # Add order
   mutate(order = substr(category, 1, 2)) %>%
-  mutate(category = substr(category, 5, nchar(.))) %>% arrange(order)
+  mutate(category = substr(category, 5, nchar(.))) %>% 
+  arrange(order)
 ```
 
 
 ```{r plot abundance (p1) plus marker genes (p2)}
+# Create labels voor de bins
+taxlab <- bintax %>% 
+  mutate(label = if_else(taxon != genus | is.na(genus), taxon, paste(taxon, "sp."))) %>%
+  filter(genome %in% names) %>%
+  mutate(label = ifelse(label == "Desulforudis sp.", "Ca. D. audaxviator", label)) %>%
+  mutate(genome = factor(genome, names)) %>% arrange(genome) %>%
+  pull(label)
+
 p1 <- bintax %>%
   # Use subset of bins
-  filter(taxon %in% names) %>%
+  filter(genome %in% names) %>%
+  # Genus in italics
   inner_join(coverm, by = "genome") %>%
   # Group tpm per taxon and standardize to 1
-  group_by(taxon, phylum) %>% summarise(tpm = sum(tpm)/3e6, .groups = "drop") %>%
-  mutate(taxon = factor(taxon, names)) %>%
+  group_by(genome, phylum) %>% summarise(tpm = sum(tpm) / 3e6, .groups = "drop") %>%
+  mutate(genome = factor(genome, names)) %>%
   mutate(Abundance = "Abundance") %>%
   # Plot
-  ggplot(aes(taxon, Abundance, fill = tpm)) +
+  ggplot(aes(genome, Abundance, fill = tpm)) +
   geom_tile(colour = "white") +
   labs(x = "", y = "", fill = "") +
-  scale_fill_gradient(low = "#C5ECFD", high = "#034968") +
-  scale_x_discrete(position = "top") + theme_tidy(ratio = NULL) + coord_equal() +
+  scale_fill_gradient(
+    name = expression(Coverage ~ (phantom()%*% 10^{6})),
+    low = "#C5ECFD", high = "#034968") +
+  scale_x_discrete(position = "top", labels = taxlab) + 
+  theme_tidy(ratio = NULL) +
+  coord_equal() +
   theme(
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
@@ -588,14 +698,16 @@ p1 <- bintax %>%
     panel.grid.minor = element_line(colour = "white", linewidth = 2)
   )
 
-p2 <- i %>%
-  mutate(taxon = factor(taxon, names)) %>%
-  mutate(category = factor(category, rev(unique(i$category)))) %>%
+p2 <- mg %>%
+  mutate(genome = factor(genome, names)) %>%
+  mutate(category = factor(category, rev(unique(mg$category)))) %>%
   mutate(value = factor(value, levels = c("1", "0"))) %>%
   # Plot
-  ggplot(aes(taxon, category, fill = value)) +
+  ggplot(aes(genome, category, fill = value)) +
   geom_tile(colour = "white") +
-  scale_fill_manual(values = c("1" = "#444431","0" = "#F0F1EB"), labels = c("Present", "Absent")) +
+  scale_fill_manual(
+    values = c("1" = "#444431","0" = "#F0F1EB"), 
+    labels = c("Present", "Absent")) +
   labs(x = "", y = "", fill = "") +
   scale_x_discrete(position = "top") + theme_tidy(ratio = NULL) + coord_equal() +
   theme(
@@ -609,25 +721,25 @@ p2 <- i %>%
 
 
 ```{r kegg modules}
+# Consider adding M00309: Entner-Doudoroff pathway in central C metabolism
+# Below C fixation pathways all incomplete
+# M00374 Dicarboxylate-hydroxybutyrate cycle
+# M00375 Hydroxypropionate-hydroxybutylate cycle
+# M00376 3-Hydroxypropionate bi-cycle
+
 t <- kegg %>%
   mutate(reference = case_when(
     # S metabolism
     module == "M00596" ~ "Dissimilatory sulfate red.",
     module == "M00176" ~ "Assimilatory sulfate red.",
-    # N metabolism
-    module == "M00175" ~ "Nitrogen fixation",
-    module == "M00531" ~ "Assimilatory nitrate red.",
-    module == "M00530" ~ "Dissimilatory nitrate red.",    
     # C fixation
-    module == "M00165" ~ "Calvin cycle",
-    module == "M00166" ~ "Red. PP cycle (R5P>G3P)",
-    module == "M00167" ~ "Red. PP cycle (G3P>R5P)", 
+    module == "M00167" ~ "Calvin cycle",
     module == "M00173" ~ "Reductive citrate cycle",
-    module == "M00377" ~ "Red. acetyl-CoA pathway",    
+    module == "M00377" ~ "Wood-Ljungdahl pathway",    
     # C metabolism
     module == "M00001" ~ "Glycolysis",
-    module == "M00307" ~ "Pyruvate ox.",
-    module == "M00009" ~ "TCA cycle"
+    module == "M00008" ~ "Entner-Doudoroff pathway",
+    module == "M00009" ~ "Citrate cycle"
   )) %>%
   filter(!is.na(reference)) %>% # Only keep the modules listed above
   # Add module to the reference for plotting
@@ -650,17 +762,12 @@ t <- kegg %>%
 ```{r plot kegg modules}
 i <- c("M00596: Dissimilatory sulfate red.",
        "M00176: Assimilatory sulfate red.",
-       "M00175: Nitrogen fixation",
-       "M00531: Assimilatory nitrate red.",
-       "M00530: Dissimilatory nitrate red.",
-       "M00165: Calvin cycle",
-       "M00166: Red. PP cycle (R5P>G3P)",
-       "M00167: Red. PP cycle (G3P>R5P)", 
        "M00173: Reductive citrate cycle",
-       "M00377: Red. acetyl-CoA pathway",
+       "M00167: Calvin cycle",
+       "M00377: Wood-Ljungdahl pathway",
        "M00001: Glycolysis",
-       "M00307: Pyruvate ox.",
-       "M00009: TCA cycle"
+       "M00008: Entner-Doudoroff pathway",
+       "M00009: Citrate cycle"
        ) %>% rev()
 
 p3 <- t %>%
@@ -668,11 +775,11 @@ p3 <- t %>%
   # Add taxon names
   inner_join(bintax, by = "genome") %>% 
   # Use subset of bins
-  filter(taxon %in% names) %>%
-  mutate(taxon = factor(taxon, names)) %>%
+  filter(genome %in% names) %>%
+  mutate(genome = factor(genome, names)) %>%
   mutate(score = factor(score, levels = c("Complete","One block missing","Incomplete","Absent"))) %>%
   # Plot
-  ggplot(aes(taxon, 
+  ggplot(aes(genome, 
              fct_relevel(reference, i), 
              fill = score)) +
   geom_tile(colour = "white") +
@@ -695,20 +802,43 @@ p3 <- t %>%
 
 ```{r kegg pathways}
 k <- emapper %>%
-  mutate(process = case_when(
-    grepl("ko02030", KEGG_Pathway) ~ "Chemotaxis",
-    grepl("ko02040", KEGG_Pathway) ~ "Flagellar assembly",
-    grepl("ko02024", KEGG_Pathway) ~ "Quorum sensing"
+  mutate(reference = case_when(
+    # Bacterial chemotaxis CheABCDRVWXYZBR
+    grepl("K03407", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03408", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03409", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03410", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03411", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03412", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03413", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03414", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03415", KEGG_ko) ~ "Chemotaxis",
+    grepl("K00575", KEGG_ko) ~ "Chemotaxis",
+    grepl("K13924", KEGG_ko) ~ "Chemotaxis",
+    grepl("K03406", KEGG_ko) ~ "Chemotaxis", # MCP
+    grepl("K05874", KEGG_ko) ~ "Chemotaxis", # tsr
+    grepl("K05875", KEGG_ko) ~ "Chemotaxis", # tar
+    grepl("K05876", KEGG_ko) ~ "Chemotaxis", # trg
+    grepl("K05877", KEGG_ko) ~ "Chemotaxis", # tap
+    grepl("K03776", KEGG_ko) ~ "Chemotaxis", # Aer
+    # Flagellar assembly
+    grepl("fli", Preferred_name) ~ "Flagellar assembly",
+    grepl("flg", Preferred_name) ~ "Flagellar assembly",
+    grepl("mot", Preferred_name) ~ "Flagellar assembly",
+    grepl("map02040", KEGG_Pathway) ~ "Flagellar assembly"
   )) %>%
-  filter(!is.na(process)) %>%
-  select(genome, reference = process, ko = KEGG_ko) %>%
+  filter(!is.na(reference)) %>%
+  select(genome, reference, ko = KEGG_ko) %>%
   group_by(genome, reference) %>% 
   summarise(n = unique(ko) %>% length(), .groups = "drop") %>%
+  # Bin MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11 lacks any value
+  rbind(list(genome = "MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11", reference = "Chemotaxis", n = 0)) %>%
   # Assign a value for every genome-module combination
   pivot_wider(names_from = "reference", values_from = "n") %>%
   pivot_longer(-1, values_to = "n", names_to = "reference") %>%
-  mutate(score = n / max(.$n, na.rm = TRUE)) %>% select(-n) %>%
-  replace_na(list(score = 0))
+  # Normalize the score for every 
+  #mutate(score = n / max(.$n, na.rm = TRUE)) %>% select(-n) %>%
+  replace_na(list(n = 0))
 ```
 
 
@@ -717,14 +847,16 @@ k <- emapper %>%
 
 p4 <- k %>%
   # Add taxon names
-  inner_join(bintax, by = "genome") %>% filter(taxon %in% names) %>%
-  ggplot(aes(x = taxon, 
+  inner_join(bintax, by = "genome") %>% filter(genome %in% names) %>%
+  ggplot(aes(x = fct_relevel(genome, names), 
              y = reference, 
-             fill = score
+             fill = n
          )) +
   geom_tile(colour = "white") +
   labs(x = "", y = "", fill = "") +
-  scale_fill_gradient(low = "#C5ECFD", high = "#034968", guide = "none") +
+  scale_fill_gradient(
+    name = "No. of genes (KOs)",
+    low = "#C5ECFD", high = "#034968") +
   scale_x_discrete(position = "top") + theme_tidy(ratio = NULL) + coord_equal() +
   theme(
     axis.ticks.x = element_blank(),
@@ -738,50 +870,17 @@ p4 <- k %>%
 ```{r, fig.width=16/2.53}
 library(patchwork)
 p1 / p2 / p3 / p4 + plot_layout(guides = "collect") & 
-  theme(plot.margin = margin(), 
+  theme(plot.margin = margin(),
+        panel.background = element_blank(),
         legend.key.height = unit(4, "mm"))
 ```
 
 ```{r}
-ggsave("../figures/heatmap.pdf", width = 16, height = 18, units = "cm")
+ggsave("../figures/cmetabolism.pdf", width = 16, height = 18, units = "cm")
 ```
 
-#### Map ####
+# 18S - eukaryotes
 
-```{r}
-# Äspö Lat N 57.4334, Lon E 16.6603) 
-# Use EPSG 3152, unit (m)
-baltic <- list.files("../../Cultures/didactic-spork/data/shapefiles/", pattern = ".shp", full.names = TRUE) %>% lapply(sf::st_read)
-baltic[[3]] <- baltic[[3]] %>% sf::st_transform(3152)
-baltic[[6]] <- baltic[[6]] %>% sf::st_transform(3152)
-baltic[[7]] <- baltic[[7]] %>% sf::st_transform(3152)
-
-ggplot() + # x (longitude), y (latitude)
-  geom_sf(data = baltic[[3]], colour = "black", fill = "white", lwd = 0.02) + # Finland
-  geom_sf(data = baltic[[6]], colour = "black", fill = "white", lwd = 0.02) + # Norway
-  geom_sf(data = baltic[[7]], colour = "black", fill = "white", lwd = 0.02) + # Sweden
-  ggspatial::annotation_scale(location = "br") +
-  annotate("rect", xmin = -126780 - 20000, xmax = -126780 + 20000, ymin = 530561 - 20000, ymax = 530561 + 20000, fill = "black" 
-           ) +
-  annotate("text", x = -126780 + 110000, y = 530561, label = "COSC-2", colour = "black", size = 7/.pt) +
-  #annotate("text", x = 15, y = 59.5, label = "Sweden", colour = "black", size = 7/.pt) +
-  #annotate("text", x = 8.5, y = 61, label = "Norway", colour = "black", size = 7/.pt) +
-  #annotate("text", x = 24, y = 62, label = "Finland", colour = "black", size = 7/.pt) +
-  lims(x = c(-605927.5080410581, 377430.44396114594), y = c(-347315.23941432964, 1172471.3907259274)) +
-  labs(x = "", y = "") + 
-  theme(
-    panel.grid = element_line(colour = "#D9D9D9", linewidth = 0.05),
-    panel.background = element_blank(),
-    axis.text = element_text(size = 7, color = "black"),
-    axis.ticks = element_blank()
-    )
-```
-```{r}
-ggsave("cosc.pdf", width = 10, height = 14, units = "cm")
-```
-
-
-#### 18S - eukaryotes ####
 ```{r}
 euk <- read_tsv("eukaryotes/ASV_table.tsv", col_types = cols(.default = col_character(),
                                                                          count = col_integer())
@@ -791,5 +890,53 @@ euk <- read_tsv("eukaryotes/ASV_table.tsv", col_types = cols(.default = col_char
                        )) %>% 
   group_by(sample) %>%
   mutate(relab = count / sum(count)) %>% ungroup()
+
+protist <- read_tsv("eukaryotes/ASV_tax.tsv", col_types = cols(.default = col_character())) %>%
+  filter(seqid %in% euk$seqid)
+```
+
+
+```{r}
+euk %>%
+  inner_join(protist, by = "seqid") %>%
+  group_by(phylum, sample) %>%
+  # Sum the abundance of each phylum within a sample
+  summarise(relab = sum(relab), .groups = 'drop_last') %>%
+  # Calculate the mean abundance of each phylum over the categories
+  summarise(mean_relab = sum(relab), .groups = 'drop') %>%
+  filter(!is.na(phylum)) %>%
+  top_n(6, mean_relab) -> t
+
+protist %>%
+  left_join(t %>% transmute(phylum, topphylum = phylum), by = "phylum") %>%
+  #mutate(topphylum = if_else(is.na(phylum), "Unidentified", topphylum)) %>%
+  replace_na(list("topphylum" = "Other")) -> taxref
+```
+
+
+```{r}
+p3 <- euk %>%
+  inner_join(taxref, by = "seqid") %>%
+  # Summarize in order to have the sum for each category and topphylum
+  group_by(sample, topphylum) %>% 
+  summarise(relab = sum(relab), .groups = 'drop') %>%
+  # Plot
+  ggplot(aes(x = sample, 
+             y = relab * 100, 
+             fill = fct_relevel(topphylum, names(cols.euk))
+             )) +
+  geom_col() + 
+  theme_tidy() + 
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank()
+        ) +
+  labs(x = "", y = "") +
+  scale_fill_manual(values = cols.euk, name = "") + guides(fill = guide_legend(reverse = TRUE)) +
+  annotate("segment", x =  0.55, xend =  3.45, y = -1, yend = -1) +
+  annotate("text", x =  2, y = -3.5, label = "Marker gene (18S)", size = 7/.pt) +
+  annotate("text", x =  0.55, y = Inf, label = "bold(c)", 
+           size = 8/.pt, hjust = 0, vjust = 1, parse = TRUE)
 ```
 
