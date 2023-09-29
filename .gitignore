@@ -17,7 +17,6 @@ gtdbtk.ar53.summary.tsv
 gtdbtk.bac120.summary.tsv
 gtdbtk.cpr.summary.tsv
 gtdbtk.summary.tsv
-overall_summary.tsv
 smd.txt
 software_versions.yml
 bin
@@ -27,3 +26,4 @@ keggmapper.tsv
 ASV_tax_species.tsv
 eukaryotes
 Authors.rtf
+audaxviator_ani.tsv
