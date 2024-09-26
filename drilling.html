@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="george.westmeijer@umu.se" />
+
+<meta name="date" content="2023-02-15" />
+
+<title>Drilling COSC-2 microbiology</title>
+
+<script src="drilling_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="drilling_files/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="drilling_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="drilling_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="drilling_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="drilling_files/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="drilling_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="drilling_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="drilling_files/navigation-1.1/tabsets.js"></script>
+<script src="drilling_files/navigation-1.1/codefolding.js"></script>
+<link href="drilling_files/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="drilling_files/highlightjs-9.12.0/highlight.js"></script>
+<link href="drilling_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="drilling_files/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Drilling COSC-2 microbiology</h1>
+<h3 class="subtitle">Characterization of microbial communities</h3>
+<h4 class="author"><a href="mailto:george.westmeijer@umu.se" class="email">george.westmeijer@umu.se</a></h4>
+<h4 class="date">2023-02-15</h4>
+
+</div>
+
+
+<pre class="r"><code>source(&quot;/Users/gewe0007/Documents/Protocols/theme.R&quot;)
+# Ranked in order of abundance
+cols.phylum &lt;- c(
+  &quot;Bacillota&quot; = &quot;#A2A475&quot;,
+  &quot;Desulfobacterota&quot; = &quot;#02401B&quot;,
+  &quot;Actinomycetota&quot; = &quot;#D69C4E&quot;,
+  &quot;Pseudomonadota&quot; = &quot;#972D15&quot;,
+  &quot;Other&quot; = &quot;#899DA4&quot;
+  )
+
+# Ranked in order of abundance
+cols.taxon &lt;- c(
+  &quot;Desulforudis&quot; = &quot;#A2A475&quot;,
+  &quot;Desulfitibacter&quot; = &quot;#FAEFD1&quot;,
+  &quot;Smithellaceae&quot; = &quot;#02401B&quot;,
+  &quot;Coriobacteriia&quot; = &quot;#D69C4E&quot;,
+  &quot;Pelotomaculaceae&quot; = &quot;#00A08A&quot;,
+  &quot;Dethiosulfatibacteraceae&quot; = &quot;#F2AD00&quot;,
+  &quot;Erysipelotrichaceae&quot; = &quot;#046C9A&quot;,
+  &quot;Other&quot; = &quot;#899DA4&quot;
+  )
+
+cols.class &lt;- c(
+  &quot;Desulfotomaculia&quot; = &quot;#A2A475&quot;,
+  &quot;Moorellia&quot; = &quot;#FAEFD1&quot;,
+  &quot;Clostridia&quot; = &quot;#00A08A&quot;,
+  &quot;Bacteroidia&quot; = &quot;#02401B&quot;,
+  &quot;Bacilli&quot; = &quot;#D69C4E&quot;,
+  &quot;Gammaproteobacteria&quot; = &quot;#972D15&quot;,
+  &quot;Alphaproteobacteria&quot; = &quot;#046C9A&quot;,
+  &quot;Other&quot; = &quot;#899DA4&quot;
+  ) %&gt;% rev()
+
+cols.euk &lt;- c(
+  &quot;Metazoa&quot; = &quot;#A2A475&quot;,
+  &quot;Ochrophyta&quot; = &quot;#FAEFD1&quot;,
+  &quot;Chlorophyta&quot; = &quot;#00A08A&quot;,
+  &quot;Dinoflagellata&quot; = &quot;#02401B&quot;,
+  &quot;Cercozoa&quot; = &quot;#972D15&quot;,
+  &quot;Fungi&quot; = &quot;#046C9A&quot;,
+  &quot;Other&quot; = &quot;#899DA4&quot;
+) %&gt;% rev()</code></pre>
+<div id="read-input-files" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Read input files</h1>
+<pre class="r"><code># GTDB release 207 was used as reference database
+
+seqtab &lt;- read_tsv(&quot;ASV_table.tsv&quot;, col_types = cols(.default = col_character()))
+gtdb &lt;- read_tsv(&quot;ASV_tax_species.tsv&quot;, col_types = cols(.default = col_character())) %&gt;%
+  mutate(phylum = case_when(
+    phylum == &quot;Proteobacteria&quot; ~ &quot;Pseudomonadota&quot;,
+    phylum == &quot;Actinobacteriota&quot; ~ &quot;Actinomycetota&quot;,
+    phylum == &quot;Firmicutes&quot; ~ &quot;Bacillota&quot;,
+    .default = phylum
+  ))
+
+# The three samples for COSC-2 are 61, 62, and 63, 64 is negative extraction control
+# Each sample contained two filters that were pooled prior to DNA extraction
+# The extraction control contains 43 unique ASVs
+i &lt;- c(&quot;P28309_1061&quot;,&quot;P28309_1062&quot;,&quot;P28309_1063&quot;,&quot;P28309_1064&quot;)
+
+# Add relative abundances
+seqtab &lt;- seqtab %&gt;%
+  pivot_longer(-1, names_to = &quot;sample&quot;, values_to = &quot;count&quot;) %&gt;%
+  mutate(sample = gsub(&quot;_S[0-9].&quot;, &quot;&quot;, sample)) %&gt;%
+  filter(sample %in% i) %&gt;% 
+  mutate(count = as.integer(count)) %&gt;% 
+  filter(count &gt; 0) %&gt;%
+  group_by(sample) %&gt;% 
+  mutate(relab = count / sum(count)) %&gt;% 
+  ungroup()
+
+# Extract the ASVs from the extraction control
+c &lt;- seqtab %&gt;% filter(sample == &quot;P28309_1064&quot;) %&gt;% pull(seqid)
+
+gtdb &lt;- gtdb %&gt;% mutate(taxon = coalesce(genus,family,order,class,phylum,domain)) %&gt;% select(-kingdom)</code></pre>
+<pre class="r"><code>euk &lt;- read_tsv(&quot;eukaryotes/ASV_table.tsv&quot;, col_types = cols(.default = col_character(),
+                                                                         count = col_integer())
+                ) %&gt;% filter(sample %in% c(&quot;WC-3642-S73-COSC-454F-981R-f1&quot;,
+                                           &quot;WC-3642-S74-COSC-454F-981R-f3&quot;,
+                                           &quot;WC-3642-S75-COSC-454F-981R-f5&quot;
+                       )) %&gt;% 
+  group_by(sample) %&gt;%
+  mutate(relab = count / sum(count)) %&gt;% ungroup()
+
+protist &lt;- read_tsv(&quot;eukaryotes/ASV_tax.tsv&quot;, col_types = cols(.default = col_character())) %&gt;%
+  filter(seqid %in% euk$seqid)</code></pre>
+<pre class="r"><code># CoverM was used for mapping the trimmed reads to the genomes
+# This file only contains the bins for this project (n = 26)
+# MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.10_sub was removed due to its low completeness (61%)
+# TPM was adjusted by 2991888/3000000
+coverm &lt;- read_tsv(&quot;coverm.tsv&quot;, col_types = cols(.default = col_character(), tpm = col_double())) %&gt;%
+  mutate(tpm = tpm * 1.002711)
+
+# Before running CheckM with the CPR market set, this objected contained 567 genomes
+# After running CheckM with CPR markers 570 genomes
+checkm &lt;- read_tsv(&quot;bin-stats-checkm.tsv&quot;, show_col_types = F)
+checkm &lt;- checkm %&gt;% filter(genome %in% coverm$genome)
+
+# Taxonomy was assigned to bins with completeness &gt; 50% and contamination &gt; 5%
+# Average completeness and contamination of Patescibacteria before CPR marker set is 65.8% (sd 7.09, n = 12) and 1.17% (sd 1.38)
+# Using CPR market set these numbers are 91.8% (sd 7.95, n = 15) and 0.930 (sd 1.71)
+
+
+bintax &lt;- read_tsv(&quot;gtdbtk.summary.tsv&quot;, show_col_types = F) %&gt;%
+  select(genome = user_genome, classification) %&gt;%
+  mutate(classification = gsub(&quot;[a-z]__&quot;, &quot;&quot;, classification)) %&gt;%
+  separate(classification, 
+           into = c(&quot;domain&quot;,&quot;phylum&quot;,&quot;class&quot;,&quot;order&quot;,&quot;family&quot;,&quot;genus&quot;,&quot;species&quot;), 
+           sep = &quot;;&quot;, fill = &quot;right&quot;) %&gt;%
+  mutate(across(everything(), \(x) na_if(x, &quot;&quot;))) %&gt;%
+  mutate(across(-1, \(x) gsub(x, pattern = &quot;_[A-Z]&quot;, replacement = &quot;&quot;))) %&gt;%
+  filter(genome %in% coverm$genome) %&gt;% distinct() %&gt;%
+  # Remove placeholder names
+  mutate(across(2:8, \(x) ifelse(grepl(&quot;[0-9]&quot;, x), NA, x))) %&gt;%
+  mutate(taxon = coalesce(genus, family, order, class, phylum)) %&gt;%
+  mutate(phylum = case_when(
+    phylum == &quot;Proteobacteria&quot; ~ &quot;Pseudomonadota&quot;,
+    phylum == &quot;Actinobacteriota&quot; ~ &quot;Actinomycetota&quot;,
+    phylum == &quot;Firmicutes&quot; ~ &quot;Bacillota&quot;,
+    .default = phylum
+  ))</code></pre>
+<pre class="r"><code>emapper &lt;- data.frame()
+
+for (file in list.files(&quot;emapper/&quot;, full.names = TRUE)) { # List all files in the emapper directory
+  name &lt;- substr(file, 10, nchar(file)) %&gt;% gsub(&quot;emapper.emapper.annotations&quot;, &quot;&quot;, .) # Extract the bin ref from the filename
+  i &lt;- read_tsv(file, show_col_types = F, comment = &quot;##&quot;) # Read the file
+  i &lt;- i %&gt;% rename(query = 1) %&gt;% mutate(genome = name) %&gt;% distinct() %&gt;% select(genome, everything()) %&gt;% mutate(KEGG_ko = gsub(&quot;ko:&quot;, &quot;&quot;, KEGG_ko))
+  emapper &lt;- emapper %&gt;% rbind(i)
+}
+
+prokka &lt;- data.frame()
+for (file in list.files(&quot;prokka/&quot;, full.names = TRUE)) {
+  name &lt;- substr(file, 9, nchar(file)) %&gt;% gsub(&quot;.tsv&quot;, &quot;&quot;, .)
+  i &lt;- read_tsv(file, show_col_types = F, comment = &quot;##&quot;)
+  i &lt;- i %&gt;% mutate(genome = name) %&gt;% distinct() %&gt;% 
+    select(genome, everything()) %&gt;% 
+    select(-locus_tag) %&gt;% 
+    rename(ec = EC_number)
+  prokka &lt;- prokka %&gt;% rbind(i)
+}
+
+kegg &lt;- read_tsv(&quot;keggmapper.tsv&quot;, col_types = cols(.default = col_character()))</code></pre>
+<pre class="r"><code># Taxa are ordered (descending) based on phylum and tpm
+# Only taxa are included with tpm &gt; 10,000 (relative abundance &gt; 1 %)
+# 14 / 27 genomes are included
+names &lt;- coverm %&gt;% 
+  group_by(genome) %&gt;% summarise(tpm = sum(tpm)) %&gt;% 
+  filter(tpm &gt; 10000) %&gt;% inner_join(bintax, by = &quot;genome&quot;) %&gt;%
+  arrange(desc(tpm)) %&gt;% pull(genome)</code></pre>
+<pre class="r"><code>checkm &lt;- list(genome = names, crispr = 
+       c(2, #  1
+         2, #  2
+         1, #  3
+         1, #  4
+         1, #  5
+         0, #  6
+         0, #  7
+         2, #  8
+         1, #  9
+         0, # 10
+         0, # 11
+         0, # 12
+         0, # 13
+         1 # 14
+         )) %&gt;% data.frame() %&gt;%
+  right_join(checkm, by = &quot;genome&quot;)</code></pre>
+</div>
+<div id="extraction-control-supplemental" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Extraction control (supplemental)</h1>
+<pre class="r"><code>seqtab %&gt;%
+  inner_join(gtdb, by = &quot;seqid&quot;) %&gt;%
+  group_by(class, sample) %&gt;%
+  # Sum the abundance of each phylum within a sample
+  summarise(relab = sum(relab), .groups = &#39;drop_last&#39;) %&gt;%
+  # Calculate the mean abundance of each phylum over the categories
+  summarise(mean_relab = sum(relab), .groups = &#39;drop&#39;) %&gt;%
+  filter(!is.na(class)) %&gt;%
+  top_n(7, mean_relab) -&gt; t
+
+gtdb %&gt;%
+  left_join(t %&gt;% transmute(class, topphylum = class), by = &quot;class&quot;) %&gt;%
+  replace_na(list(&quot;topphylum&quot; = &quot;Other&quot;)) -&gt; taxref
+
+i &lt;- c(&quot;P28309_1061&quot;,&quot;P28309_1062&quot;,&quot;P28309_1063&quot;,&quot;P28309_1064&quot;)
+
+p1 &lt;- seqtab %&gt;%
+  filter(sample %in% i) %&gt;%
+  inner_join(taxref, by = &quot;seqid&quot;) %&gt;%
+  # Summarize in order to have the sum for each category and topphylum
+  group_by(sample, topphylum) %&gt;% 
+  summarise(relab = sum(relab), .groups = &#39;drop_last&#39;) %&gt;%
+  # Call the plot
+  ggplot(aes(x = fct_relevel(sample, i),
+             y = relab * 100, 
+             fill = fct_relevel(topphylum, names(cols.class))
+             )
+         ) +
+  labs(x = &#39;&#39;, y = &#39;Relative abundance (%)&#39;, fill = &quot;Class&quot;) +
+  geom_col() +
+  scale_fill_manual(values = cols.class) +
+  annotate(&quot;segment&quot;, x =  0.55, xend =  3.45, y = 101, yend = 101) +
+  annotate(&quot;segment&quot;, x =  3.55, xend =  4.45, y = 101, yend = 101) +
+  annotate(&#39;text&#39;, x =  2, y = 104, size = 7 / .pt, label = &quot;COSC filters&quot;, hjust = 0.5) +
+  annotate(&#39;text&#39;, x =  4, y = 104, size = 7 / .pt, label = &quot;Extraction c.&quot;, hjust = 0.5) +
+  theme_tidy(legend = &quot;bottom&quot;) + guides(fill = guide_legend(reverse = T, ncol = 2)) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.key.height = unit(4, &quot;mm&quot;)
+  )</code></pre>
+<pre><code>## Warning: The `legend.title.align` argument of `theme()` is deprecated as of ggplot2
+## 3.5.0.
+## ℹ Please use theme(legend.title = element_text(hjust)) instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code>meta &lt;- list(sample = c(&quot;P28309_1061&quot;,&quot;P28309_1062&quot;,&quot;P28309_1063&quot;,&quot;P28309_1064&quot;),
+     type = c(&quot;Sample #1&quot;,&quot;Sample #2&quot;,&quot;Sample #3&quot;,&quot;Neg. ex. control&quot;))
+
+set.seed(999)
+nmds &lt;- seqtab %&gt;% # Full size fraction
+  select(seqid, sample, count) %&gt;% spread(seqid, count, fill = 0) %&gt;%
+  column_to_rownames(&quot;sample&quot;) %&gt;% vegan::metaMDS()</code></pre>
+<pre><code>## Square root transformation
+## Wisconsin double standardization
+## Run 0 stress 0 
+## Run 1 stress 0 
+## ... Procrustes: rmse 0.1805838  max resid 0.2327328 
+## Run 2 stress 0 
+## ... Procrustes: rmse 0.1743649  max resid 0.2210592 
+## Run 3 stress 0 
+## ... Procrustes: rmse 0.1182361  max resid 0.1712026 
+## Run 4 stress 0 
+## ... Procrustes: rmse 0.250388  max resid 0.3063962 
+## Run 5 stress 0 
+## ... Procrustes: rmse 0.1514074  max resid 0.1833223 
+## Run 6 stress 0 
+## ... Procrustes: rmse 0.180584  max resid 0.2323083 
+## Run 7 stress 0 
+## ... Procrustes: rmse 0.1373955  max resid 0.1731178 
+## Run 8 stress 0 
+## ... Procrustes: rmse 0.2083802  max resid 0.2614032 
+## Run 9 stress 0 
+## ... Procrustes: rmse 0.2911566  max resid 0.3703864 
+## Run 10 stress 0 
+## ... Procrustes: rmse 0.2875698  max resid 0.4419265 
+## Run 11 stress 0 
+## ... Procrustes: rmse 0.05747628  max resid 0.08866069 
+## Run 12 stress 0 
+## ... Procrustes: rmse 0.1977346  max resid 0.2493807 
+## Run 13 stress 0 
+## ... Procrustes: rmse 0.1466437  max resid 0.1910094 
+## Run 14 stress 0 
+## ... Procrustes: rmse 0.06714494  max resid 0.101729 
+## Run 15 stress 0 
+## ... Procrustes: rmse 0.2199064  max resid 0.2527089 
+## Run 16 stress 0 
+## ... Procrustes: rmse 0.2080436  max resid 0.3345487 
+## Run 17 stress 0 
+## ... Procrustes: rmse 0.2025462  max resid 0.2935596 
+## Run 18 stress 0 
+## ... Procrustes: rmse 0.1471221  max resid 0.1765249 
+## Run 19 stress 0 
+## ... Procrustes: rmse 0.2450162  max resid 0.2961807 
+## Run 20 stress 0 
+## ... Procrustes: rmse 0.1782839  max resid 0.208786 
+## *** Best solution was not repeated -- monoMDS stopping criteria:
+##     20: stress &lt; smin</code></pre>
+<pre><code>## Warning in vegan::metaMDS(.): stress is (nearly) zero: you may have
+## insufficient data</code></pre>
+<pre><code>## Warning in postMDS(out$points, dis, plot = max(0, plot - 1), ...): skipping
+## half-change scaling: too few points below threshold</code></pre>
+<pre class="r"><code>vegan::scores(nmds)$sites %&gt;%
+  as.data.frame() %&gt;%
+  rownames_to_column(&quot;sample&quot;) -&gt; nmds.scores
+
+p2 &lt;- nmds.scores %&gt;%
+  inner_join(meta, by = &quot;sample&quot;, copy = T) %&gt;%
+  ggplot(aes(NMDS1, NMDS2)) +
+  geom_vline(xintercept = 0, linetype = &#39;dotted&#39;) +
+  geom_hline(yintercept = 0, linetype = &#39;dotted&#39;) +
+  # Points for samples, coloured by nature
+  geom_point(size = 3) +
+  theme_tidy() +
+  ggrepel::geom_label_repel(aes(label = type), color = &quot;black&quot;,
+                  size = 7/.pt) +
+  annotate(&#39;text&#39;, x = Inf, y = -Inf, size = 7/.pt, 
+           label = paste(&#39;Stress = &#39;, round(nmds$stress, digits = 2)),
+           hjust = 1.2, vjust = -1,
+           )</code></pre>
+</div>
+<div id="rarefaction-of-16-18s" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Rarefaction of 16 &amp; 18S</h1>
+<p>Function rarecurve draws a rarefaction curve for each row of the input data. The rarefaction curves are evaluated using the interval of step sample sizes, always including 1 and total sample size. If sample is specified, a vertical line is drawn at sample with horizontal lines for the rarefied species richnesses.</p>
+<pre class="r"><code># Perform the subsampling
+rare &lt;- seqtab %&gt;%
+  # Remove negative control
+  filter(sample != &quot;P28309_1064&quot;) %&gt;%
+  rbind(euk) %&gt;%
+  select(-relab) %&gt;%
+  pivot_wider(names_from = &quot;seqid&quot;, values_from = &quot;count&quot;, values_fill = 0) %&gt;%
+  column_to_rownames(&quot;sample&quot;) %&gt;%
+  vegan::rarecurve(sample = 10000, step = 100, tidy = TRUE) %&gt;%
+  tibble() %&gt;%
+  rename_with(tolower)
+
+lab &lt;- list(site = unique(rare$site), label = c(&quot;16S #1&quot;, &quot;16S #2&quot;, &quot;16S #3&quot;,
+                                                &quot;18S #1&quot;, &quot;18S #2&quot;, &quot;18S #3&quot;)
+            ) %&gt;% data.frame() %&gt;%
+  inner_join(rare, by = &quot;site&quot;) %&gt;%
+  group_by(site) %&gt;% slice_max(species) %&gt;% ungroup() %&gt;%
+  mutate(sample = if_else(label == &quot;18S #1&quot;, sample - 10000, sample))
+
+# Plot the curve
+p3 &lt;- rare %&gt;%
+  ggplot(aes(sample, species, group = site)) + 
+  geom_line() +
+  geom_label(data = lab, aes(sample, species, label = label), size = 7/.pt) +
+  labs(x = expression(&#39;No. of reads (&#39; %*% &#39;1000)&#39;), y = &quot;No. of ASVs&quot;) +
+  theme_tidy() + 
+  scale_x_continuous(labels = c(&quot;0&quot;, &quot;50&quot;, &quot;100&quot;, &quot;150&quot;), breaks = c(0, 50000, 100000, 150000)) +
+  scale_y_continuous(labels = c(&quot;0&quot;, &quot;500&quot;, &quot;1,000&quot;, &quot;1,500&quot;), breaks = c(0, 500, 1000, 1500))</code></pre>
+<pre class="r"><code>library(patchwork)
+p1 + p2 + p3 + plot_layout(nrow = 2)</code></pre>
+<p><img src="drilling_files/figure-html/combine%20plots%20with%20control-1.png" width="683.00395256917" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/control.pdf&quot;, width = 16, height = 16, units = &quot;cm&quot;)</code></pre>
+</div>
+<div id="field-site" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Field site</h1>
+<pre class="r"><code># Äspö Lat N 57.4334, Lon E 16.6603) 
+baltic &lt;- list.files(&quot;../../Cultures/didactic-spork/data/shapefiles/&quot;, pattern = &quot;.shp&quot;, full.names = TRUE) %&gt;% lapply(sf::st_read)</code></pre>
+<pre><code>## Reading layer `BLR_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/BLR_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 23.19235 ymin: 51.26957 xmax: 32.79461 ymax: 56.16836
+## Geodetic CRS:  WGS 84
+## Reading layer `DEU_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/DEU_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 5.871619 ymin: 47.26986 xmax: 15.03811 ymax: 55.05653
+## Geodetic CRS:  WGS 84
+## Reading layer `DNK_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/DNK_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 8.076389 ymin: 54.55903 xmax: 15.19306 ymax: 57.75153
+## Geodetic CRS:  WGS 84
+## Reading layer `EST_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/EST_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 21.76431 ymin: 57.51395 xmax: 28.20904 ymax: 59.82202
+## Geodetic CRS:  WGS 84
+## Reading layer `FIN_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/FIN_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 20.55121 ymin: 59.72097 xmax: 31.5828 ymax: 70.09145
+## Geodetic CRS:  WGS 84
+## Reading layer `LTU_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/LTU_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 20.9506 ymin: 53.89011 xmax: 26.84722 ymax: 56.44703
+## Geodetic CRS:  WGS 84
+## Reading layer `LVA_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/LVA_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 20.97139 ymin: 55.66372 xmax: 28.24051 ymax: 58.08557
+## Geodetic CRS:  WGS 84
+## Reading layer `NOR_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/NOR_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 3.904688 ymin: 57.95903 xmax: 31.16198 ymax: 71.18125
+## Geodetic CRS:  WGS 84
+## Reading layer `POL_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/POL_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 14.12127 ymin: 49.00613 xmax: 24.15328 ymax: 54.83569
+## Geodetic CRS:  WGS 84
+## Reading layer `RUS_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/RUS_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -180 ymin: 41.18887 xmax: 180 ymax: 81.85625
+## Geodetic CRS:  WGS 84
+## Reading layer `SWE_adm0&#39; from data source 
+##   `/Users/gewe0007/Documents/Cultures/didactic-spork/data/shapefiles/SWE_adm0.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 1 feature and 70 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 10.96139 ymin: 55.33625 xmax: 24.1724 ymax: 69.05904
+## Geodetic CRS:  WGS 84</code></pre>
+<pre class="r"><code># Use EPSG 3152, unit (m)
+i &lt;- sf::st_read(&quot;gadm41_SWE_shp/gadm41_SWE_1.shp&quot;)</code></pre>
+<pre><code>## Reading layer `gadm41_SWE_1&#39; from data source 
+##   `/Users/gewe0007/Documents/Drilling/cosc/gadm41_SWE_shp/gadm41_SWE_1.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 21 features and 11 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 10.96139 ymin: 55.33625 xmax: 24.1724 ymax: 69.05904
+## Geodetic CRS:  WGS 84</code></pre>
+<pre class="r"><code>baltic[[1]] &lt;- sf::st_simplify(baltic[[1]], dTolerance = 4000)
+baltic[[2]] &lt;- sf::st_simplify(baltic[[2]], dTolerance = 4000)
+baltic[[3]] &lt;- sf::st_make_valid(baltic[[3]])
+baltic[[3]] &lt;- sf::st_simplify(baltic[[3]], dTolerance = 4000)
+baltic[[4]] &lt;- sf::st_make_valid(baltic[[4]])
+baltic[[4]] &lt;- sf::st_simplify(baltic[[4]], dTolerance = 4000)
+baltic[[5]] &lt;- sf::st_simplify(baltic[[5]], dTolerance = 4000)
+baltic[[6]] &lt;- sf::st_simplify(baltic[[6]], dTolerance = 4000)
+baltic[[7]] &lt;- sf::st_simplify(baltic[[7]], dTolerance = 4000)
+baltic[[8]] &lt;- sf::st_simplify(baltic[[8]], dTolerance = 4000)
+baltic[[9]] &lt;- sf::st_make_valid(baltic[[9]])
+baltic[[9]] &lt;- sf::st_simplify(baltic[[9]], dTolerance = 4000)
+baltic[[10]] &lt;- sf::st_make_valid(baltic[[10]])
+baltic[[10]] &lt;- sf::st_simplify(baltic[[10]], dTolerance = 4000)
+baltic[[11]] &lt;- sf::st_simplify(baltic[[11]], dTolerance = 4000)
+
+
+
+baltic[[1]] &lt;- baltic[[1]] %&gt;% sf::st_transform(3152)
+baltic[[2]] &lt;- baltic[[2]] %&gt;% sf::st_transform(3152)
+baltic[[3]] &lt;- baltic[[3]] %&gt;% sf::st_transform(3152)
+baltic[[4]] &lt;- baltic[[4]] %&gt;% sf::st_transform(3152)
+baltic[[5]] &lt;- baltic[[5]] %&gt;% sf::st_transform(3152)
+baltic[[6]] &lt;- baltic[[6]] %&gt;% sf::st_transform(3152)
+baltic[[7]] &lt;- baltic[[7]] %&gt;% sf::st_transform(3152)
+baltic[[8]] &lt;- baltic[[8]] %&gt;% sf::st_transform(3152)
+baltic[[9]] &lt;- baltic[[9]] %&gt;% sf::st_transform(3152)
+baltic[[10]] &lt;- baltic[[10]] %&gt;% sf::st_transform(3152)
+baltic[[11]] &lt;- baltic[[11]] %&gt;% sf::st_transform(3152)</code></pre>
+<pre class="r"><code># the Outokumpu Deep Drill Hole, in eastern Finland, located at latitude 62.71740°N, longitude 29.06528°E.
+# Olkiluoto, Eurajoki, Finland Lat 61.23694444444445 N, Lon 21.440833333333334 E
+
+sites &lt;- list(
+  site = c(&quot;COSC-2&quot;,&quot;Äspö HRL&quot;,&quot;Outokumpu&quot;,&quot;Olkiluoto&quot;),
+  x = c(-126835,16227,661319,281650),
+  xplot = c(-126835 + 100000,16227 - 110000,661319-120000,281650 + 100000),
+  y = c(530577,-131493,504347,295776)
+) %&gt;% data.frame()
+
+ggplot() + # x (longitude), y (latitude)
+  geom_sf(data = baltic[[1]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[2]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[3]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[4]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[5]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[6]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[7]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Norway
+  geom_sf(data = baltic[[8]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Sweden  
+  geom_sf(data = baltic[[9]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Sweden  
+  geom_sf(data = baltic[[10]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Sweden 
+  geom_sf(data = baltic[[11]], colour = &quot;#000000&quot;, fill = &quot;#F7F2EE&quot;, lwd = 0.1) + # Sweden  
+  ggspatial::annotation_scale(location = &quot;br&quot;, text_cex = 0.6) +
+  geom_point(data = sites, mapping = aes(x = x, y = y),
+             shape = 21, stroke = .5, fill = &quot;#899DA4&quot;, colour = &quot;#000000&quot;, size = 3
+             ) +
+  geom_label(data = sites, mapping = aes(x = xplot, y = y, label = site),
+            size = 7/.pt, label.size = 0, label.r = unit(0, &quot;mm&quot;)) +
+  lims(x = c(-300000, 700000), y = c(-400000, 900000)) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) + 
+  theme(
+    plot.margin = margin(),
+    panel.background = element_rect(fill = &quot;#DBE1E3&quot;),
+    panel.grid = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.border = element_rect(fill = &quot;transparent&quot;, linewidth = 0.25)
+    )</code></pre>
+<p><img src="drilling_files/figure-html/plot%20scandinavia-1.png" width="303.557312252964" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/map.pdf&quot;, width = 10, height = 14, units = &quot;cm&quot;)</code></pre>
+</div>
+<div id="bar-plot-community-phylum" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Bar plot community (phylum)</h1>
+<pre class="r"><code>i &lt;- c(&quot;VK-3516-f1&quot;,&quot;VK-3516-f3&quot;,&quot;VK-3516-f5&quot;,&quot;P28309_1061&quot;,&quot;P28309_1062&quot;,&quot;P28309_1063&quot;)
+
+p1 &lt;- coverm %&gt;%
+  # Prepare the data to be merged with the amplicon data
+  select(sample, seqid = genome, relab = tpm) %&gt;%
+  mutate(relab = relab / 1e6) %&gt;%
+  rbind(seqtab[,c(&quot;sample&quot;,&quot;seqid&quot;,&quot;relab&quot;)]) %&gt;%
+  filter(sample %in% i) %&gt;%
+  left_join(
+    bintax %&gt;% rename(seqid = genome) %&gt;% rbind(gtdb), by = &quot;seqid&quot;
+    ) %&gt;%
+  mutate(phylum = ifelse(!is.na(phylum) &amp; phylum %in% names(cols.phylum), phylum, &quot;Other&quot;)) %&gt;%
+  # Sum abundance within phylum
+  group_by(sample, phylum) %&gt;% summarise(relab = sum(relab), .groups = &quot;drop&quot;) %&gt;%
+  mutate(phylum = factor(phylum, levels = names(cols.phylum))) %&gt;%
+  # Plot
+  ggplot(aes(x = fct_relevel(sample, i), 
+             y = relab * 100, 
+             fill = fct_rev(phylum))) +
+  geom_col() + 
+  theme_tidy() + 
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+  labs(x = &quot;&quot;, y = &quot;Relative abundance (%)&quot;) +
+  scale_fill_manual(values = rev(cols.phylum), name = &quot;&quot;) +
+  annotate(&quot;segment&quot;, x =  0.55, xend =  3.45, y = -1, yend = -1) +
+  annotate(&quot;segment&quot;, x =  3.55, xend =  6.45, y = -1, yend = -1) +
+  annotate(&quot;text&quot;, x =  0.55, y = Inf, label = &quot;bold(a)&quot;, 
+           size = 8/.pt, hjust = 0, vjust = 1, parse = TRUE) +
+  annotate(&quot;text&quot;, x =  2, y = -3.5, label = &quot;Metagenomes&quot;, size = 7/.pt) +
+  annotate(&quot;text&quot;, x =  5, y = -3.5, label = &quot;Marker gene (16S)&quot;, size = 7/.pt)</code></pre>
+<pre class="r"><code>p2 &lt;- coverm %&gt;%
+  select(sample, seqid = genome, relab = tpm) %&gt;%
+  mutate(relab = relab / 1e6) %&gt;%
+  rbind(seqtab[,c(&quot;sample&quot;,&quot;seqid&quot;,&quot;relab&quot;)]) %&gt;%
+  filter(sample %in% i) %&gt;%
+  left_join(
+    bintax %&gt;% rename(seqid = genome) %&gt;% rbind(gtdb), by = &quot;seqid&quot;
+    ) %&gt;%
+  mutate(taxon = case_when(
+    genus %in% c(&quot;Desulforudis&quot;,&quot;Desulfitibacter&quot;) ~ genus,
+    family %in% c(&quot;Smithellaceae&quot;,&quot;Pelotomaculaceae&quot;,&quot;Dethiosulfatibacteraceae&quot;,
+                  &quot;Erysipelotrichaceae&quot;) ~ family,
+    class == &quot;Coriobacteriia&quot; ~ class,
+    .default = &quot;Other&quot;)
+    ) %&gt;%
+  # Sum abundance within phylum
+  group_by(sample, taxon) %&gt;% summarise(relab = sum(relab), .groups = &quot;drop&quot;) %&gt;%
+  mutate(taxon = factor(taxon, levels = names(cols.taxon))) %&gt;%
+  # Plot
+  ggplot(aes(x = fct_relevel(sample, i), 
+             y = relab * 100, fill = fct_rev(taxon))) +
+  geom_col() + 
+  theme_tidy() + 
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank()
+        ) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +
+  scale_fill_manual(values = cols.taxon, name = &quot;&quot;, 
+                    labels = c(&quot;Other&quot;,&quot;Erysipelotrichaceae(f)&quot;,
+                               &quot;Dethiosulfatibacteraceae (f)&quot;,&quot;Pelotomaculaceae (f)&quot;,
+                               &quot;Coriobacteriia (c)&quot;,&quot;Smithellaceae (f)&quot;, 
+                               &quot;Desulfitibacter (g)&quot;,&quot;D. audaxviator (s)&quot;
+                               )) +
+  annotate(&quot;segment&quot;, x =  0.55, xend =  3.45, y = -1, yend = -1) +
+  annotate(&quot;segment&quot;, x =  3.55, xend =  6.45, y = -1, yend = -1) +
+  annotate(&quot;text&quot;, x =  2, y = -3.5, label = &quot;Metagenomes&quot;, size = 7/.pt) +
+  annotate(&quot;text&quot;, x =  5, y = -3.5, label = &quot;Marker gene (16S)&quot;, size = 7/.pt) +
+  annotate(&quot;text&quot;, x =  0.55, y = Inf, label = &quot;bold(b)&quot;, 
+           size = 8/.pt, hjust = 0, vjust = 1, parse = TRUE)</code></pre>
+<pre class="r"><code>library(patchwork)
+p1 + p2 + p3 &amp; guides(fill = guide_legend(ncol = 2, reverse = TRUE)) &amp; 
+  theme(
+  legend.key.height = unit(4, &quot;mm&quot;),
+  legend.spacing = margin(),
+  legend.margin = margin(-12,0,-12,0),
+  legend.box.margin = margin(),
+  plot.margin = margin(),
+  aspect.ratio = 1.5,
+  legend.position = &quot;bottom&quot;,
+  panel.border = element_blank(),
+  axis.line = element_line(linewidth = 0.4, colour = &quot;black&quot;),
+  axis.title.y = element_text(margin = margin(0,-2,0,0))
+)</code></pre>
+<p><img src="drilling_files/figure-html/combine%20both%20levels-1.png" width="683.00395256917" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/barplot_euk.pdf&quot;, width = 18, height = 12, units = &quot;cm&quot;)</code></pre>
+</div>
+<div id="visualise-stats-of-genomes-fig.-3" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Visualise stats of genomes (Fig. 3)</h1>
+<pre class="r"><code>i &lt;- c(&quot;Bacillota&quot;,&quot;Desulfobacterota&quot;,&quot;Actinomycetota&quot;,&quot;Pseudomonadota&quot;,&quot;Other&quot;)
+# Desulforudis audaxviator GC 0.6085068, genome size 2616697 bp
+library(ggtext)
+
+p1 &lt;- checkm %&gt;%
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;%
+  mutate(phylum = ifelse(phylum %in% i, phylum, &quot;Other&quot;)) %&gt;%
+  select(genome, phylum, predicted.genes, genome.size) %&gt;%
+  distinct() %&gt;%
+  mutate(genome.size = genome.size/1e6) %&gt;%
+  ggplot(aes(x = genome.size, 
+             y = predicted.genes, 
+             color = fct_relevel(phylum,i)
+             )) +
+  geom_smooth(method = &quot;lm&quot;, formula = y ~ x, colour = &quot;black&quot;, fill = &quot;#d9d9d9&quot;, se = TRUE, linetype = 0) +
+  geom_point(size = 2.5, shape = 1, stroke = 1) + 
+  annotate(&quot;text&quot;, x = Inf, y = -Inf, 
+           label = &quot;paste(R ^ 2, \&quot; = 0.96\&quot;)&quot;, 
+           size = 7/.pt, vjust = -0.5, hjust = 1, parse = TRUE) +
+  annotate(&quot;richtext&quot;, x = 2.8, y = 2728, 
+           label = &quot;Ca. D. audaxviator: 2.6 Mbp&quot;, 
+           size = 7/.pt, hjust = 0, label.color = &quot;#A2A475&quot;,
+           label.padding = unit(c(0.1,0.1,0.1,0.1), &quot;lines&quot;)) +
+  annotate(&quot;richtext&quot;, x = 4.5, y = 6371, 
+           label = &quot;Bradyrhizobium sp.: 6.7 Mbp&quot;, 
+           size = 7/.pt, label.color = &quot;#972D15&quot;, vjust = 0.5,
+           label.padding = unit(c(0.1,0.1,0.1,0.1), &quot;lines&quot;)) +
+  labs(x = &quot;Estimated genome size (Mbp)&quot;, y = &quot;No. predicted genes&quot;, color = &quot;&quot;) +
+  scale_color_manual(values = cols.phylum, guide = &quot;none&quot;) +
+  scale_y_continuous(labels = c(&quot;2,000&quot;,&quot;3,000&quot;,&quot;4,000&quot;,&quot;5,000&quot;,&quot;6,000&quot;),
+                     breaks = c(2000,3000,4000,5000,6000)) +
+  theme_tidy(ratio = 1.2) +
+  theme(
+    text = element_text(colour = &quot;black&quot;),
+    panel.border = element_blank(),
+    axis.line = element_line(linewidth = 0.4, &quot;black&quot;)
+  )</code></pre>
+<pre class="r"><code>names &lt;- c(
+  &quot;completeness&quot; = &quot;Completeness (%)&quot;,
+  &quot;predicted.genes&quot; = &quot;No. predicted genes&quot;
+)
+
+p2 &lt;- checkm %&gt;%
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;%
+  mutate(phylum = ifelse(phylum %in% i, phylum, &quot;Other&quot;)) %&gt;%
+  select(genome, phylum, completeness) %&gt;%
+  distinct() %&gt;%
+  ggplot(aes(x = fct_relevel(phylum,i), 
+             y = completeness, 
+             group = phylum, 
+             colour = phylum, 
+             fill = fct_relevel(phylum,i)
+             )) +
+  geom_boxplot(key_glyph = &quot;rect&quot;) +
+  labs(x = &quot;&quot;, y = &quot;Estimated completeness (%)&quot;, fill = &quot;&quot;) +
+  scale_colour_manual(values = cols.phylum, guide = &quot;none&quot;) +
+  scale_fill_manual(values = alpha(cols.phylum, alpha = 0.5)) +
+  theme_tidy(legend = &quot;bottom&quot;, ratio = 1.2) +
+  theme(
+    axis.line = element_line(linewidth = 0.4, &quot;black&quot;),
+    panel.border = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.key.height = unit(4, &quot;mm&quot;),
+    axis.title.y = element_text(margin = margin()),
+    plot.margin = margin(),
+    legend.spacing.x = unit(1, &quot;mm&quot;)
+  )</code></pre>
+<pre class="r"><code>nmds &lt;- coverm %&gt;%
+  # Sum the abundance of both coverage per metagenome
+  mutate(abundance = 1) %&gt;% 
+  inner_join(emapper, by = &quot;genome&quot;) %&gt;%
+  # Filter out NA and add multiple KOs on new line
+  filter(KEGG_ko != &quot;-&quot;) %&gt;% separate_rows(KEGG_ko, sep = &quot;,&quot;) %&gt;%
+  # Sum the abundance of each KO within the metagenomes
+  group_by(genome, KEGG_ko) %&gt;% 
+  summarise(abundance = sum(abundance), .groups = &quot;drop&quot;) %&gt;%
+  # Pivot to prepare a numerical matrix
+  pivot_wider(names_from = &quot;KEGG_ko&quot;, values_from = &quot;abundance&quot;, values_fill = 0) %&gt;%
+  column_to_rownames(&quot;genome&quot;) %&gt;%
+  vegan::metaMDS()</code></pre>
+<pre><code>## Warning in inner_join(., emapper, by = &quot;genome&quot;): Detected an unexpected many-to-many relationship between `x` and `y`.
+## ℹ Row 1 of `x` matches multiple rows in `y`.
+## ℹ Row 42681 of `y` matches multiple rows in `x`.
+## ℹ If a many-to-many relationship is expected, set `relationship =
+##   &quot;many-to-many&quot;` to silence this warning.</code></pre>
+<pre><code>## Square root transformation
+## Wisconsin double standardization
+## Run 0 stress 0.1178244 
+## Run 1 stress 0.1252928 
+## Run 2 stress 0.1178244 
+## ... New best solution
+## ... Procrustes: rmse 2.466387e-05  max resid 6.886466e-05 
+## ... Similar to previous best
+## Run 3 stress 0.1250616 
+## Run 4 stress 0.1252933 
+## Run 5 stress 0.1249711 
+## Run 6 stress 0.1204681 
+## Run 7 stress 0.1178244 
+## ... New best solution
+## ... Procrustes: rmse 5.070796e-05  max resid 0.000179132 
+## ... Similar to previous best
+## Run 8 stress 0.123278 
+## Run 9 stress 0.1250615 
+## Run 10 stress 0.1252931 
+## Run 11 stress 0.123278 
+## Run 12 stress 0.1300233 
+## Run 13 stress 0.1232778 
+## Run 14 stress 0.1347501 
+## Run 15 stress 0.1240695 
+## Run 16 stress 0.1178244 
+## ... Procrustes: rmse 2.395753e-05  max resid 7.458009e-05 
+## ... Similar to previous best
+## Run 17 stress 0.1204733 
+## Run 18 stress 0.1227492 
+## Run 19 stress 0.123278 
+## Run 20 stress 0.1232781 
+## *** Best solution repeated 2 times</code></pre>
+<pre class="r"><code>nmds.scores &lt;- vegan::scores(nmds)$sites %&gt;%
+  as.data.frame() %&gt;%
+  rownames_to_column(&quot;genome&quot;)</code></pre>
+<pre class="r"><code>library(ggtext)
+i &lt;- c(&quot;Bacillota&quot;,&quot;Desulfobacterota&quot;,&quot;Actinomycetota&quot;,&quot;Pseudomonadota&quot;,&quot;Other&quot;)
+
+p3 &lt;- nmds.scores %&gt;%
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;%
+  mutate(phylum = ifelse(phylum %in% i, phylum, &quot;Other&quot;)) %&gt;%
+  # Plot
+  ggplot(aes(x = NMDS1, 
+             y = NMDS2, 
+             colour = fct_relevel(phylum,i))) +
+  geom_vline(xintercept = 0, linetype = &#39;dotted&#39;, linewidth = 0.5) +
+  geom_hline(yintercept = 0, linetype = &#39;dotted&#39;, linewidth = 0.5) +
+  # Points for samples, coloured by nature
+  geom_point(size = 2.5, shape = 1, stroke = 1) +
+  theme_tidy() +
+  scale_color_manual(values = cols.phylum, name = &quot;&quot;, guide = &quot;none&quot;) +
+  annotate(&#39;text&#39;, x = -Inf, y = -Inf, size = 7/.pt,
+           label = paste(&#39;Stress = &#39;, round(nmds$stress, digits = 2)),
+           hjust = -0.1, vjust = -0.5) +
+  annotate(&quot;richtext&quot;, x = -0.8, y = 1.12, 
+           label = &quot;Methanobacteriota&quot;, 
+           size = 7/.pt, hjust = 0, label.color = &quot;#899DA4&quot;, 
+           label.padding = unit(c(0.1,0.1,0.1,0.1), &quot;lines&quot;)) +
+  annotate(&quot;richtext&quot;, x = 0.032, y = 0.25, 
+           label = &quot;Ca. D. audaxviator&quot;, 
+           size = 7/.pt, label.color = &quot;#A2A475&quot;, 
+           label.padding = unit(c(0.1,0.1,0.1,0.1), &quot;lines&quot;)) +
+  theme(
+    axis.title.y = element_text(margin = margin()),
+    panel.border = element_rect(linewidth = 0.4, colour = &quot;black&quot;, fill = NA)
+    )</code></pre>
+<pre class="r"><code>library(patchwork)
+p1 + p2 + p3 + plot_layout(guides = &quot;collect&quot;) + plot_annotation(tag_levels = &quot;a&quot;) &amp; 
+  theme(
+    plot.tag.position = c(0.15, 1.05),
+    plot.tag = element_text(size = 8, colour = &quot;black&quot;, face = &quot;bold&quot;),
+    legend.position = &quot;bottom&quot;,
+    plot.margin = margin(),
+    plot.background = element_blank())</code></pre>
+<p><img src="drilling_files/figure-html/plot%20stats%20on%20bins-1.png" width="680.314960629921" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/binstats.pdf&quot;, height = 10, width = 18, units = &quot;cm&quot;)</code></pre>
+</div>
+<div id="heatmap-metabolic-potential" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Heatmap metabolic potential</h1>
+<pre class="r"><code># Taxa are ordered (descending) based on phylum and tpm
+# Only taxa are included with tpm &gt; 10,000 (relative abundance &gt; 1 %)
+# 14 / 27 genomes are included
+names &lt;- coverm %&gt;% 
+  group_by(genome) %&gt;% summarise(tpm = sum(tpm)) %&gt;% 
+  filter(tpm &gt; 10000) %&gt;% inner_join(bintax, by = &quot;genome&quot;) %&gt;%
+  arrange(desc(tpm)) %&gt;% pull(genome)</code></pre>
+<pre class="r"><code>emapper %&gt;%
+  rename(ec = EC, gene = Preferred_name) %&gt;%
+  mutate(category = case_when(
+    # S metabolism
+    ec == &quot;2.7.7.4&quot; ~ &quot;03: Sulfate adenylyltransferase (sat)&quot;, # sat
+    grepl(&quot;apr[A,B]&quot;, gene) ~ &quot;04: Adenylylsulfate reductase (aprAB)&quot;, # aprAB
+    grepl(&quot;asr[A-C]&quot;, gene) ~  &quot;05: Anaerobic sulfite reductase (asrABC)&quot;, # asrABC
+    grepl(&quot;sox[X,Y,Z,B]&quot;, gene) ~ &quot;07: Thiosulfate ox. (soxABXYZ)&quot;, # soxA: soxBCD not present
+    gene == &quot;soeB&quot; ~ &quot;08: Sulfite dehydrogenase (soeB)&quot;, # soeB: soeAC not present
+    gene == &quot;sorB&quot; ~ &quot;08: Sulfite dehydrogenase (sorB)&quot;,
+    # N metabolism
+    ec == &quot;1.18.6.1&quot; ~ &quot;09: Nitrogen fixation (nifKDH)&quot;, # nifKDH
+    grepl(&quot;nrf[A,H]&quot;, gene) ~ &quot;13: Dissimilatory nitrate red. (nrfAH)&quot;, # nrfAH
+    # C fixation
+    ec ==  &quot;1.2.7.4&quot; ~ &quot;16: CO dehydrogenase (cooS)&quot;, # WL pathway 
+    ec ==&quot;2.3.1.169&quot; ~ &quot;17: Acetyl-CoA synthase (acs)&quot;, # WL pathway 
+    ec == &quot;4.1.1.39&quot; ~ &quot;18: RuBisCO&quot;, # Calvin cycle
+    ec ==&quot;4.2.1.120&quot; ~ &quot;19: 4-hydroxybutyryl-CoA dehydratase (abfD)&quot;,
+    ec == &quot;6.4.1.3&quot;  ~ &quot;20: propionyl-CoA carboxylase (pccB)&quot;, # 3-Hydroxypropionate bi-cycle
+    # H2 metabolism
+    ec == &quot;1.9.3.1&quot; ~ &quot;21: Cytochrome c oxidase (ctaCDEF)&quot;,
+    ec == &quot;1.12.1.2&quot; ~ &quot;22: NAD-reducing hydrogenase (hoxfHY)&quot;,
+    ec %in% c(&quot;1.12.99.6&quot;,&quot;1.12.2.1&quot;,&quot;1.12.7.2&quot;) ~ &quot;23: NiFe hydrogenase (hydAB, hoxGK)&quot;
+  )) %&gt;% 
+  # Remove genes outside of above selection
+  filter(!is.na(category)) %&gt;%
+  group_by(genome, gene) %&gt;% summarise(n = n(), .groups = &quot;drop&quot;) %&gt;%
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;% #filter(genome %in% names &amp; n &gt; 1) %&gt;%
+  select(taxon, gene, n, genome) %&gt;%
+  filter(gene != &quot;-&quot; &amp; n &gt; 1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["taxon"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gene"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]},{"label":["genome"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"Hydrogenophaga","2":"cysD","3":"2","4":"MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014"},{"1":"Hydrogenophaga","2":"pccA","3":"2","4":"MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014"},{"1":"Acetobacterium","2":"cdhC","3":"4","4":"MEGAHIT-MaxBin2Refined-VK-3516-media-gw-oil-b_S38_L002.006_sub"},{"1":"Acetobacterium","2":"nifH","3":"2","4":"MEGAHIT-MaxBin2Refined-VK-3516-media-gw-oil-b_S38_L002.006_sub"},{"1":"Acetobacterium","2":"nifK","3":"2","4":"MEGAHIT-MaxBin2Refined-VK-3516-media-gw-oil-b_S38_L002.006_sub"},{"1":"Bradyrhizobium","2":"ctaD","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub"},{"1":"Desulfomicrobium","2":"aprA","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub"},{"1":"Desulfomicrobium","2":"cooS-2","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub"},{"1":"Arachnia","2":"cysD","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24"},{"1":"Desulforudis","2":"cdhC","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7"},{"1":"Syntrophomonadaceae","2":"hydA","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2"},{"1":"Acetobacterium","2":"cdhC","3":"4","4":"MEGAHIT-MetaBAT2Refined-VK-3516-methanol-a_S14_L002.1"},{"1":"Acetobacterium","2":"cooS1","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-methanol-a_S14_L002.1"},{"1":"Acetobacterium","2":"nifK","3":"2","4":"MEGAHIT-MetaBAT2Refined-VK-3516-methanol-a_S14_L002.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>mg &lt;- emapper %&gt;%
+  rename(ec = EC, gene = Preferred_name) %&gt;%
+  #select(genome, ec = EC, gene = Preferred_name) %&gt;%
+  mutate(category = case_when(
+    # S metabolism
+    ec == &quot;2.7.7.4&quot; ~ &quot;03: Sulfate adenylyltransferase (sat)&quot;, # sat
+    grepl(&quot;apr[A,B]&quot;, gene) ~ &quot;04: Adenylylsulfate reductase (aprAB)&quot;, # aprAB
+    grepl(&quot;asr[A-C]&quot;, gene) ~  &quot;05: Anaerobic sulfite reductase (asrABC)&quot;, # asrABC
+    grepl(&quot;sox[X,Y,Z,B]&quot;, gene) ~ &quot;07: Thiosulfate ox. (soxABXYZ)&quot;, # soxA: soxBCD not present
+    gene == &quot;soeB&quot; ~ &quot;08: Sulfite dehydrogenase (soeB)&quot;, # soeB: soeAC not present
+    gene == &quot;sorB&quot; ~ &quot;08: Sulfite dehydrogenase (sorB)&quot;,
+    # N metabolism
+    ec == &quot;1.18.6.1&quot; ~ &quot;21: Nitrogen fixation (nifKDH)&quot;, # nifKDH
+    grepl(&quot;nrf[A,H]&quot;, gene) ~ &quot;22: Dissimilatory nitrate red. (nrfAH)&quot;, # nrfAH
+    # C fixation
+    ec ==  &quot;1.2.7.4&quot; ~ &quot;16: CO dehydrogenase (cooS)&quot;, # WL pathway 
+    ec ==&quot;2.3.1.169&quot; ~ &quot;17: Acetyl-CoA synthase (acs)&quot;, # WL pathway 
+    ec == &quot;4.1.1.39&quot; ~ &quot;18: RuBisCO&quot;, # Calvin cycle
+    ec ==&quot;4.2.1.120&quot; ~ &quot;19: 4-hydroxybutyryl-CoA dehydratase (abfD)&quot;,
+    ec == &quot;6.4.1.3&quot;  ~ &quot;20: propionyl-CoA carboxylase (pccB)&quot;, # 3-Hydroxypropionate bi-cycle
+    # H2 metabolism
+    ec == &quot;1.9.3.1&quot; ~ &quot;25: Cytochrome c oxidase (ctaCDEF)&quot;,
+    ec == &quot;1.12.1.2&quot; ~ &quot;23: NAD-reducing hydrogenase (hoxfHY)&quot;,
+    ec %in% c(&quot;1.12.99.6&quot;,&quot;1.12.2.1&quot;,&quot;1.12.7.2&quot;) ~ &quot;24: NiFe hydrogenase (hydAB, hoxGK)&quot;
+  )) %&gt;% 
+  # Remove genes outside of above selection
+  filter(!is.na(category)) %&gt;%
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;% #filter(genome %in% names) %&gt;%
+  select(category, genome) %&gt;% mutate(value = 1)</code></pre>
+<pre class="r"><code># Key gene(s) for pathways
+# M00376 3-Hydroxypropionate bi-cycle: EC:6.4.1.3 propionyl-CoA carboxylase
+# M00375 Hydroxypropionate-hydroxybutylate cycle: EC:4.2.1.120 4-hydroxybutyryl-CoA dehydratase
+# M00374 Dicarboxylate-hydroxybutyrate cycle: EC:4.2.1.120 4-hydroxybutyryl-CoA dehydratase
+
+# Check for multiple gene copies
+mg &lt;- prokka %&gt;%
+  mutate(category = case_when(
+    # S metabolism
+    ec == &quot;2.7.7.4&quot; ~ &quot;03: Sulfate adenylyltransferase (sat)&quot;, # sat
+    grepl(&quot;apr[A,B]&quot;, gene) ~ &quot;04: Adenylylsulfate reductase (aprAB)&quot;, # aprAB
+    grepl(&quot;asr[A-C]&quot;, gene) ~ &quot;05: Anaerobic sulfite reductase (asrABC)&quot;, # asrABC
+    grepl(&quot;sox[X,Y,Z,B]&quot;, gene) ~ &quot;07: Thiosulfate ox. (soxABXYZ)&quot;, # soxA: soxBCD not present
+    gene == &quot;soeB&quot; ~ &quot;08: Sulfite dehydrogenase (soeB)&quot;, # soeB: soeAC not present
+    gene == &quot;sorB&quot; ~ &quot;08: Sulfite dehydrogenase (sorB)&quot;,
+    # N metabolism
+    ec == &quot;1.18.6.1&quot; ~ &quot;21: Nitrogen fixation (nifKDH)&quot;, # nifKDH
+    grepl(&quot;nrf[A,H]&quot;, gene) ~ &quot;22: Dissimilatory nitrate red. (nrfAH)&quot;, # nrfAH
+    # C fixation
+    ec ==  &quot;1.2.7.4&quot; ~ &quot;16: CO dehydrogenase (cooS)&quot;, # WL pathway 
+    ec ==&quot;2.3.1.169&quot; ~ &quot;17: Acetyl-CoA synthase (acs)&quot;, # WL pathway 
+    ec == &quot;4.1.1.39&quot; ~ &quot;18: RuBisCO&quot;, # Calvin cycle
+    ec ==&quot;4.2.1.120&quot; ~ &quot;19: 4-hydroxybutyryl-CoA dehydratase (abfD)&quot;,
+    ec == &quot;6.4.1.3&quot;  ~ &quot;20: propionyl-CoA carboxylase (pccB)&quot;, # 3-Hydroxypropionate bi-cycle
+    # H2 metabolism
+    ec == &quot;1.9.3.1&quot; ~ &quot;25: Cytochrome c oxidase (ctaCDEF)&quot;,
+    ec == &quot;1.12.1.2&quot; ~ &quot;23: NAD-reducing hydrogenase (hoxfHY)&quot;,
+    ec %in% c(&quot;1.12.99.6&quot;,&quot;1.12.2.1&quot;,&quot;1.12.7.2&quot;) ~ &quot;24: NiFe hydrogenase (hydAB, hoxGK)&quot;
+  )) %&gt;%
+  # Remove genes outside of above selection
+  filter(!is.na(category)) %&gt;%
+  # Selected only the bins from the names object
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;% filter(genome %in% names) %&gt;%
+  select(category, genome) %&gt;% mutate(value = 1) %&gt;%
+  # Add Eggnog mapper query
+  rbind(mg) %&gt;%
+  distinct() %&gt;%
+  # Assign a value (0/1) to each combination
+  pivot_wider(names_from = &quot;genome&quot;, values_from = &quot;value&quot;, values_fill = 0) %&gt;%
+  pivot_longer(-1, names_to = &quot;genome&quot;, values_to = &quot;value&quot;) %&gt;%
+  # Add order
+  mutate(order = substr(category, 1, 2)) %&gt;%
+  mutate(category = substr(category, 5, nchar(.))) %&gt;% 
+  arrange(order)</code></pre>
+<pre class="r"><code># Create labels voor de bins
+taxlab &lt;- bintax %&gt;% 
+  mutate(label = if_else(taxon != genus | is.na(genus), taxon, paste(taxon, &quot;sp.&quot;))) %&gt;%
+  filter(genome %in% names) %&gt;%
+  mutate(label = ifelse(label == &quot;Desulforudis sp.&quot;, &quot;Ca. D. audaxviator&quot;, label)) %&gt;%
+  mutate(genome = factor(genome, names)) %&gt;% arrange(genome) %&gt;%
+  pull(label)
+
+p1 &lt;- bintax %&gt;%
+  # Use subset of bins
+  filter(genome %in% names) %&gt;%
+  # Genus in italics
+  inner_join(coverm, by = &quot;genome&quot;) %&gt;%
+  # Group tpm per taxon and standardize to 1
+  group_by(genome, phylum) %&gt;% summarise(tpm = sum(tpm) / 3e6, .groups = &quot;drop&quot;) %&gt;%
+  mutate(genome = factor(genome, names)) %&gt;%
+  mutate(Abundance = &quot;Abundance&quot;) %&gt;%
+  # Plot
+  ggplot(aes(genome, Abundance, fill = tpm)) +
+  geom_tile(colour = &quot;white&quot;) +
+  labs(x = &quot;&quot;, y = &quot;&quot;, fill = &quot;&quot;) +
+  scale_fill_gradient(
+    name = expression(Coverage ~ (phantom()%*% 10^{6})),
+    low = &quot;#C5ECFD&quot;, high = &quot;#034968&quot;) +
+  scale_x_discrete(position = &quot;top&quot;, labels = taxlab) + 
+  theme_tidy(ratio = NULL) +
+  coord_equal() +
+  theme(
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    panel.grid.minor = element_line(colour = &quot;white&quot;, linewidth = 2)
+  )
+
+mg &lt;- checkm %&gt;%
+  filter(genome %in% names) %&gt;%
+  mutate(category = &quot;26: Crispr-CAS&quot;) %&gt;%
+  select(genome, category, value = crispr) %&gt;%
+  mutate(value = gsub(2, 1, value)) %&gt;%
+  mutate(order = substr(category, 1, 2)) %&gt;%
+  mutate(category = substr(category, 5, nchar(.))) %&gt;% 
+  rbind(mg) %&gt;% arrange(order)
+
+p2 &lt;- mg %&gt;%
+  filter(genome %in% names) %&gt;%
+  mutate(genome = factor(genome, names)) %&gt;%
+  mutate(category = factor(category, rev(unique(mg$category)))) %&gt;%
+  mutate(value = factor(value, levels = c(&quot;1&quot;, &quot;0&quot;))) %&gt;%
+  # Plot
+  ggplot(aes(genome, category, fill = value)) +
+  geom_tile(colour = &quot;white&quot;) +
+  scale_fill_manual(
+    values = c(&quot;1&quot; = &quot;#444431&quot;,&quot;0&quot; = &quot;#F0F1EB&quot;), 
+    labels = c(&quot;Present&quot;, &quot;Absent&quot;)) +
+  labs(x = &quot;&quot;, y = &quot;&quot;, fill = &quot;&quot;) +
+  scale_x_discrete(position = &quot;top&quot;) + theme_tidy(ratio = NULL) + coord_equal() +
+  theme(
+    plot.margin = margin(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.minor = element_line(colour = &quot;white&quot;, linewidth = 2)
+  )</code></pre>
+<pre class="r"><code># Consider adding M00309: Entner-Doudoroff pathway in central C metabolism
+# Below C fixation pathways all incomplete
+# M00374 Dicarboxylate-hydroxybutyrate cycle
+# M00375 Hydroxypropionate-hydroxybutylate cycle
+# M00376 3-Hydroxypropionate bi-cycle
+
+t &lt;- kegg %&gt;%
+  mutate(reference = case_when(
+    # S metabolism
+    module == &quot;M00596&quot; ~ &quot;Dissimilatory sulfate red.&quot;,
+    module == &quot;M00176&quot; ~ &quot;Assimilatory sulfate red.&quot;,
+    # C fixation
+    module == &quot;M00167&quot; ~ &quot;Calvin cycle&quot;,
+    module == &quot;M00173&quot; ~ &quot;Reductive citrate cycle&quot;,
+    module == &quot;M00377&quot; ~ &quot;Wood-Ljungdahl pathway&quot;,    
+    # C metabolism
+    module == &quot;M00001&quot; ~ &quot;Glycolysis&quot;,
+    module == &quot;M00008&quot; ~ &quot;Entner-Doudoroff pathway&quot;,
+    module == &quot;M00009&quot; ~ &quot;Citrate cycle&quot;
+  )) %&gt;%
+  filter(!is.na(reference)) %&gt;% # Only keep the modules listed above
+  # Add module to the reference for plotting
+  mutate(reference = paste(module, &quot;: &quot;, reference, sep = &quot;&quot;)) %&gt;%
+  # Format the completeness for plotting
+  mutate(genes = gsub(&quot;/.*&quot;, &quot;&quot;, completeness) %&gt;% as.numeric()) %&gt;%
+  mutate(total = gsub(&quot;.*/&quot;, &quot;&quot;, completeness) %&gt;% as.numeric()) %&gt;%
+  mutate(score = case_when(
+    genes == total ~ &quot;Complete&quot;,
+    (total - genes) == 1 ~ &quot;One block missing&quot;,
+    .default = &quot;Incomplete&quot;
+  )) %&gt;%
+  select(genome, reference, score) %&gt;%
+  # Assign a value for every genome-module combination
+  pivot_wider(names_from = &quot;reference&quot;, values_from = &quot;score&quot;) %&gt;%
+  pivot_longer(-1, values_to = &quot;score&quot;, names_to = &quot;reference&quot;)</code></pre>
+<pre class="r"><code>i &lt;- c(&quot;M00596: Dissimilatory sulfate red.&quot;,
+       &quot;M00176: Assimilatory sulfate red.&quot;,
+       &quot;M00173: Reductive citrate cycle&quot;,
+       &quot;M00167: Calvin cycle&quot;,
+       &quot;M00377: Wood-Ljungdahl pathway&quot;,
+       &quot;M00001: Glycolysis&quot;,
+       &quot;M00008: Entner-Doudoroff pathway&quot;,
+       &quot;M00009: Citrate cycle&quot;
+       ) %&gt;% rev()
+
+p3 &lt;- t %&gt;%
+  replace_na(list(score = &quot;Absent&quot;)) %&gt;%
+  # Add taxon names
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;% 
+  # Use subset of bins
+  filter(genome %in% names) %&gt;%
+  mutate(genome = factor(genome, names)) %&gt;%
+  mutate(score = factor(score, levels = c(&quot;Complete&quot;,&quot;One block missing&quot;,&quot;Incomplete&quot;,&quot;Absent&quot;))) %&gt;%
+  # Plot
+  ggplot(aes(genome, 
+             fct_relevel(reference, i), 
+             fill = score)) +
+  geom_tile(colour = &quot;white&quot;) +
+  scale_fill_manual(values = c(&quot;Complete&quot; = &quot;#444431&quot;,
+                               &quot;One block missing&quot; = &quot;#707151&quot;,
+                               &quot;Incomplete&quot; = &quot;#B6B79B&quot;,
+                               &quot;Absent&quot; = &quot;#F0F1EB&quot;
+                               )) +
+  labs(x = &quot;&quot;, y = &quot;&quot;, fill = &quot;&quot;) +
+  scale_x_discrete(position = &quot;top&quot;) + theme_tidy(ratio = NULL) + coord_equal() +
+  theme(
+    plot.margin = margin(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.minor = element_line(colour = &quot;white&quot;, linewidth = 2)
+  )</code></pre>
+<pre class="r"><code>k &lt;- emapper %&gt;%
+  mutate(reference = case_when(
+    # Bacterial chemotaxis CheABCDRVWXYZBR
+    grepl(&quot;K03407&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03408&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03409&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03410&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03411&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03412&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03413&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03414&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03415&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K00575&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K13924&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;,
+    grepl(&quot;K03406&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;, # MCP
+    grepl(&quot;K05874&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;, # tsr
+    grepl(&quot;K05875&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;, # tar
+    grepl(&quot;K05876&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;, # trg
+    grepl(&quot;K05877&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;, # tap
+    grepl(&quot;K03776&quot;, KEGG_ko) ~ &quot;Chemotaxis&quot;, # Aer
+    # Flagellar assembly
+    grepl(&quot;fli&quot;, Preferred_name) ~ &quot;Flagellar assembly&quot;,
+    grepl(&quot;flg&quot;, Preferred_name) ~ &quot;Flagellar assembly&quot;,
+    grepl(&quot;mot&quot;, Preferred_name) ~ &quot;Flagellar assembly&quot;,
+    grepl(&quot;map02040&quot;, KEGG_Pathway) ~ &quot;Flagellar assembly&quot;
+  )) %&gt;%
+  filter(!is.na(reference)) %&gt;%
+  select(genome, reference, ko = KEGG_ko) %&gt;%
+  group_by(genome, reference) %&gt;% 
+  summarise(n = unique(ko) %&gt;% length(), .groups = &quot;drop&quot;) %&gt;%
+  # Bin MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11 lacks any value
+  rbind(list(genome = &quot;MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11&quot;, reference = &quot;Chemotaxis&quot;, n = 0)) %&gt;%
+  # Assign a value for every genome-module combination
+  pivot_wider(names_from = &quot;reference&quot;, values_from = &quot;n&quot;) %&gt;%
+  pivot_longer(-1, values_to = &quot;n&quot;, names_to = &quot;reference&quot;) %&gt;%
+  # Normalize the score for every 
+  #mutate(score = n / max(.$n, na.rm = TRUE)) %&gt;% select(-n) %&gt;%
+  replace_na(list(n = 0))</code></pre>
+<pre class="r"><code># Aspect ratio is y / x 
+p4 &lt;- k %&gt;%
+  # Add taxon names
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;% filter(genome %in% names) %&gt;%
+  ggplot(aes(x = fct_relevel(genome, names), 
+             y = reference, 
+             fill = n
+         )) +
+  geom_tile(colour = &quot;white&quot;) +
+  labs(x = &quot;&quot;, y = &quot;&quot;, fill = &quot;&quot;) +
+  scale_fill_gradient(
+    name = &quot;No. of genes (KOs)&quot;,
+    low = &quot;#C5ECFD&quot;, high = &quot;#034968&quot;) +
+  scale_x_discrete(position = &quot;top&quot;) + theme_tidy(ratio = NULL) + coord_equal() +
+  theme(
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.minor = element_line(colour = &quot;white&quot;, linewidth = 2)
+  )</code></pre>
+<pre class="r"><code>library(patchwork)
+p1 / p2 / p3 / p4 + plot_layout(guides = &quot;collect&quot;) &amp; 
+  theme(plot.margin = margin(),
+        panel.background = element_blank(),
+        legend.key.height = unit(4, &quot;mm&quot;))</code></pre>
+<p><img src="drilling_files/figure-html/plot%20fig.%204-1.png" width="607.114624505929" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/cmetabolism.pdf&quot;, width = 16, height = 18, units = &quot;cm&quot;)</code></pre>
+</div>
+<div id="s---eukaryotes" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> 18S - eukaryotes</h1>
+<pre class="r"><code>euk %&gt;%
+  inner_join(protist, by = &quot;seqid&quot;) %&gt;%
+  group_by(phylum, sample) %&gt;%
+  # Sum the abundance of each phylum within a sample
+  summarise(relab = sum(relab), .groups = &#39;drop_last&#39;) %&gt;%
+  # Calculate the mean abundance of each phylum over the categories
+  summarise(mean_relab = sum(relab), .groups = &#39;drop&#39;) %&gt;%
+  filter(!is.na(phylum)) %&gt;%
+  top_n(6, mean_relab) -&gt; t
+
+protist %&gt;%
+  left_join(t %&gt;% transmute(phylum, topphylum = phylum), by = &quot;phylum&quot;) %&gt;%
+  #mutate(topphylum = if_else(is.na(phylum), &quot;Unidentified&quot;, topphylum)) %&gt;%
+  replace_na(list(&quot;topphylum&quot; = &quot;Other&quot;)) -&gt; taxref</code></pre>
+<pre class="r"><code>p3 &lt;- euk %&gt;%
+  inner_join(taxref, by = &quot;seqid&quot;) %&gt;%
+  # Summarize in order to have the sum for each category and topphylum
+  group_by(sample, topphylum) %&gt;% 
+  summarise(relab = sum(relab), .groups = &#39;drop&#39;) %&gt;%
+  # Plot
+  ggplot(aes(x = sample, 
+             y = relab * 100, 
+             fill = fct_relevel(topphylum, names(cols.euk))
+             )) +
+  geom_col() + 
+  theme_tidy() + 
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank()
+        ) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +
+  scale_fill_manual(values = cols.euk, name = &quot;&quot;) + guides(fill = guide_legend(reverse = TRUE)) +
+  annotate(&quot;segment&quot;, x =  0.55, xend =  3.45, y = -1, yend = -1) +
+  annotate(&quot;text&quot;, x =  2, y = -3.5, label = &quot;Marker gene (18S)&quot;, size = 7/.pt) +
+  annotate(&quot;text&quot;, x =  0.55, y = Inf, label = &quot;bold(c)&quot;, 
+           size = 8/.pt, hjust = 0, vjust = 1, parse = TRUE)</code></pre>
+</div>
+<div id="heat-map-d.-audaxviator" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Heat map D. audaxviator</h1>
+<pre class="r"><code>ani &lt;- read_tsv(&quot;audaxviator_ani.tsv&quot;, 
+                col_types = cols(.default = col_character(), ani = col_double()
+                                 ))
+
+ref &lt;- c(&quot;MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7.fa&quot; = &quot;Sweden (F307, this study)&quot;, 
+         &quot;MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.13.fa&quot; = &quot;Sweden (F513, this study)&quot;,
+         &quot;SoB1_SRR13164376.23.fa&quot; = &quot;SA (SOB1, Lau et al. 2014)&quot;, 
+         &quot;SoB2_SRR13164375.35.fa&quot; = &quot;SA (SOB2, Lau et al. 2014)&quot;,
+         &quot;SoW10_SRR5011273.55.fa&quot; = &quot;SA (SOW10, Lau et al. 2016)&quot;,
+         &quot;SoW11_SRR5011275.16.fa&quot; = &quot;SA (SOW11, Lau et al. 2016)&quot;,
+         &quot;SoW12_SRR5011277.1.fa&quot;  = &quot;SA (SOW12, Lau et al. 2016)&quot;,
+         &quot;SoTa7_SRR1633224.15.fa&quot; = &quot;SA (SOTA7, Magnabosco et al. 2015)&quot;,
+         &quot;SoMp_SAG_Desulforudis_audaxviator_MP104C.fa&quot; = &quot;SA (SOMP, Chivian et al. 2008)&quot;,
+         &quot;RT3_SRR7102746.45.fa&quot; = &quot;Russia (Kadnikov et al. 2018)&quot;) 
+           
+
+ani &lt;- ani %&gt;%
+  # Replace the bin names with a shorter reference, based on the named vector
+  mutate(x = ref[as.character(x)]) %&gt;%
+  mutate(y = ref[as.character(y)]) %&gt;%
+  pivot_wider(names_from = &quot;y&quot;, values_from = &quot;ani&quot;) %&gt;%
+  column_to_rownames(&quot;x&quot;) %&gt;%
+  pheatmap::pheatmap(
+    color = colorRampPalette(c(&quot;#F0F1EB&quot;,&quot;#5C5C4E&quot;))(6),
+    cluster_cols = FALSE,
+    border_color = &quot;white&quot;,
+    cellwidth = 20, cellheight = 20,
+    treeheight_row = 25,
+    drop_levels = TRUE,
+    legend_breaks = c(98.5, 99, 99.5, 100),
+    legend_labels = c(&quot;98.5 %&quot;, &quot;99 %&quot;, &quot;99.5 %&quot;, &quot;100 %&quot;),
+    fontsize = 7,
+    display_numbers = TRUE, fontsize_number = 7, number_format = &quot;%g&quot;, number_color = &quot;black&quot;,
+    width = 18/2.53, height = 16/2.53
+  )</code></pre>
+<p><img src="drilling_files/figure-html/read%20and%20plot%20ani-1.png" width="672" /></p>
+</div>
+<div id="metabolic-weight" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Metabolic weight</h1>
+<pre class="r"><code># Taxa are ordered (descending) based on phylum and tpm
+# Only taxa are included with tpm &gt; 10,000 (relative abundance &gt; 1 %)
+# 14 / 27 genomes are included
+names &lt;- coverm %&gt;% 
+  group_by(genome) %&gt;% summarise(tpm = sum(tpm)) %&gt;% 
+  filter(tpm &gt; 10000) %&gt;% inner_join(bintax, by = &quot;genome&quot;) %&gt;%
+  arrange(desc(tpm)) %&gt;% pull(genome)
+
+t &lt;- c(
+  &quot;Organic carbon oxidation - CO oxidation&quot;,
+  &quot;Organic carbon oxidation - fatty acid degradation&quot;,
+  &quot;Organic carbon oxidation - formate oxidation&quot;,
+  &quot;Organic carbon oxidation - methanol oxidation&quot;,
+  &quot;Carbon fixation - CBB cycle (Rubisco)&quot;,
+  &quot;Carbon fixation - Wood-Ljungdahl pathway&quot;,
+  &quot;Hydrogen generation&quot;,
+  &quot;Fermentation&quot;,
+  &quot;Hydrogen oxidation&quot;,
+  &quot;N2 fixation - nifDK||vnfDKG||nifH&quot;,
+  &quot;Iron reduction&quot;,
+  &quot;Sulfide oxidation - sqr&quot;,
+  &quot;Sulfur oxidation - sdo&quot;,
+  &quot;Sulfite oxidation&quot;,
+  &quot;Sulfate reduction&quot;,
+  &quot;Sulfite reduction - dsrABD&quot;,
+  &quot;Thiosulfate oxidation&quot;,
+  &quot;Thiosulfate disproportionation (to sulfite + hydrogen sulfide)&quot;
+) %&gt;% rev()
+
+mw &lt;- read_tsv(&quot;metabolicweight.tsv&quot;, 
+               col_types = cols(.default = col_character(), mw = col_double()
+                                )) %&gt;%
+  mutate(pathway = substr(.$pathway, 8, nchar(.))) %&gt;%
+  filter(genome %in% names | genome == &quot;general&quot;)</code></pre>
+<pre class="r"><code>p1 &lt;- bintax %&gt;%
+  # Use subset of bins
+  filter(genome %in% names) %&gt;%
+  mutate(genome = factor(genome, names)) %&gt;%
+  mutate(taxonomy = &quot;Taxonomy&quot;) %&gt;%
+  # Only most abundant phyla
+  mutate(phylum = if_else(phylum %in% names(cols.phylum), phylum, &quot;Other&quot;)) %&gt;%
+  # Plot
+  ggplot(aes(genome, 
+             taxonomy, 
+             fill = fct_relevel(phylum, names(cols.phylum))
+             )) +
+  geom_tile(colour = &quot;white&quot;) +
+  labs(x = &quot;&quot;, y = &quot;&quot;, fill = &quot;&quot;) +
+  scale_fill_manual(values = cols.phylum) +
+  scale_x_discrete(position = &quot;top&quot;, labels = taxlab) + 
+  theme_tidy(ratio = NULL) +
+  coord_equal() +
+  theme(
+    legend.spacing.x = unit(0, &quot;mm&quot;),
+    legend.key.height = unit(4, &quot;mm&quot;),
+    legend.key.width = unit(4, &quot;mm&quot;),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    axis.text.y = element_blank(),
+    panel.border = element_rect(linewidth = 1,fill = NA)
+  )</code></pre>
+<pre class="r"><code>y.lab &lt;- t %&gt;%
+  gsub(&quot;Organic&quot;,&quot;Org.&quot;,.) %&gt;%
+  gsub(&quot;oxidation&quot;,&quot;ox.&quot;,.) %&gt;%
+  gsub(&quot;reduction&quot;,&quot;red.&quot;,.) %&gt;%
+  gsub(&quot;[()]&quot;,&quot;&quot;,.) %&gt;%
+  gsub(&quot; to sulfite \\+ hydrogen sulfide&quot;,&quot;&quot;,.) %&gt;%
+  gsub(&quot;disproportionation&quot;,&quot;dispr.&quot;,.) %&gt;%
+  gsub(&quot;carbon&quot;,&quot;C&quot;,.) %&gt;%
+  gsub(&quot;Carbon&quot;,&quot;C&quot;,.) %&gt;%
+  gsub(&quot;fixation&quot;,&quot;fix.&quot;,.) %&gt;%
+  gsub(&quot; pathway&quot;,&quot;&quot;,.) %&gt;%
+  gsub(&quot;nifDK\\|\\|vnfDKG\\|\\|nifH&quot;,&quot;nifDHK&quot;,.) %&gt;%
+  gsub(&quot;degradation&quot;,&quot;degr.&quot;,.) %&gt;%
+  gsub(&quot; -&quot;, &quot;:&quot;,.)
+
+p2 &lt;- mw %&gt;%
+  inner_join(bintax, by = &quot;genome&quot;) %&gt;%
+  # Order the genomes
+  mutate(genome = factor(genome, names)) %&gt;%
+  # Filter out pathways
+  #filter(pathway %in% t) %&gt;%
+  #mutate(pathway = factor(pathway, levels = t)) %&gt;%
+  # Plot
+  ggplot(aes(genome, pathway)) +
+  geom_point(aes(size = mw), shape = 21, stroke = 0.5, fill = &quot;white&quot;) +
+  theme_tidy(ratio = 1.5) +
+  scale_x_discrete(labels = taxlab, position = &quot;top&quot;) +
+  #scale_y_discrete(labels = y.lab) +
+  labs(x = &quot;&quot;, y = &quot;&quot;, size = &quot;Metabolic\nweight score&quot;) +
+  theme(
+    legend.spacing.x = unit(0, &quot;mm&quot;),
+    legend.box.margin = margin(),
+    panel.border = element_rect(linewidth = 1,fill = NA),
+    axis.ticks = element_blank(),
+    axis.text.x.top = element_text(angle = 90),
+    panel.grid.major = element_line(linewidth = 0.1, color = &quot;#BDBDBD&quot;)
+  )</code></pre>
+<pre class="r"><code>library(patchwork)
+p1 + p2 + plot_layout(nrow = 2, guides = &quot;collect&quot;) &amp; 
+  theme(plot.margin = margin(),
+        legend.margin = margin(0,0,0,-4))</code></pre>
+<p><img src="drilling_files/figure-html/plot%20combine%20mw%20with%20phylum-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/mw.pdf&quot;, width = 12, height = 18, units = &quot;cm&quot;)</code></pre>
+</div>
+<div id="chemistry---including-äspö" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> Chemistry - including Äspö</h1>
+<pre class="r"><code>chem &lt;- read_tsv(&quot;../data/hydrochemistry.txt&quot;) %&gt;%
+  select(borehole = replicate, Mg, Br, Cl) %&gt;%
+  mutate(origin = case_when(
+    borehole %in% c(&quot;SA1730A-1&quot;,&quot;KA1755A-3&quot;,&quot;SA2600A-1&quot;,&quot;KA2862A-1&quot;) ~ &quot;Äspö: saline&quot;,
+    borehole == &quot;COSC&quot; ~ &quot;COSC-2&quot;,
+    borehole == &quot;KR0015B&quot; ~ &quot;Äspö: meteoric&quot;,
+    grepl(&quot;Outokumpu&quot;, borehole) ~ &quot;Outokumpu&quot;,
+    grepl(&quot;KFM&quot;, borehole) ~ &quot;Forsmark: glacial&quot;,
+    .default = &quot;Äspö: marine&quot;
+  )) %&gt;%
+  mutate(ratio = (Cl/Br)*2.253992)</code></pre>
+<pre><code>## Rows: 30 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;\t&quot;
+## chr (1): replicate
+## dbl (8): depth, EC, ph, Cl, Sr, SO4, Br, Mg
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>cols.gw &lt;- c(
+  &quot;COSC-2&quot; = &quot;#972D15&quot;,
+  &quot;Äspö: meteoric&quot; = &quot;#02401B&quot;,
+  &quot;Äspö: marine&quot; = &quot;#D69C4E&quot;,
+  &quot;Äspö: saline&quot; = &quot;#899DA4&quot;,
+  &quot;Outokumpu&quot; = &quot;#046C9A&quot;,
+  &quot;Forsmark: glacial&quot; = &quot;#FAEFD1&quot;
+  )
+
+p1 &lt;- chem %&gt;%
+  # Plot
+  ggplot(aes(Cl, ratio, fill = fct_relevel(origin, names(cols.gw)))) +
+  geom_point(size = 3, shape = 21, stroke = 0.3) +
+  theme_tidy() +
+  scale_x_continuous(labels = c(&quot;0&quot;,&quot;4,000&quot;,&quot;8,000&quot;,&quot;12,000&quot;,&quot;16,000&quot;)) +
+  scale_fill_manual(values = cols.gw) +
+  labs(x = expression(Cl~(mg~L^{-1})),
+       y = &quot;Mass ratio chloride:bromide&quot;,
+       fill = &quot;&quot;
+       ) +
+  theme(
+    panel.border = element_rect(fill = NA, linewidth = 1, color = &quot;#000000&quot;)
+    )</code></pre>
+<pre class="r"><code>p2 &lt;- chem %&gt;%
+  # Plot
+  ggplot(aes(Cl, Cl/Mg, fill = fct_relevel(origin, names(cols.gw)))) +
+  geom_point(size = 3, shape = 21, stroke = 0.3) +
+  theme_tidy() +
+  scale_x_continuous(labels = c(&quot;0&quot;,&quot;4,000&quot;,&quot;8,000&quot;,&quot;12,000&quot;,&quot;16,000&quot;)) +
+  scale_fill_manual(values = cols.gw) +
+  labs(x = expression(Cl~(mg~L^{-1})),
+       y = expression(Mg~(mg~L^{-1})),
+       fill = &quot;&quot;
+       ) +
+  theme(
+    panel.border = element_rect(fill = NA, linewidth = 1, color = &quot;#000000&quot;)
+    )</code></pre>
+<pre class="r"><code>library(patchwork)
+p1 + p2 + plot_layout(guides = &quot;collect&quot;) + plot_annotation(tag_levels = c(&quot;a&quot;,&quot;b&quot;)) +
+  theme(
+    plot.tag = element_text(size = 8, face = &quot;bold&quot;),
+    plot.tag.position = c(0.15,1.0)
+  )</code></pre>
+<p><img src="drilling_files/figure-html/plot%20supplemental%20fig.%201-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/groundwaters.pdf&quot;, width = 18, height = 8, units = &quot;cm&quot;)</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

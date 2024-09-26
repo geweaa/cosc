@@ -1,7 +1,7 @@
 ---
 title: "Drilling COSC-2 microbiology"
 subtitle: "Characterization of microbial communities"
-author: "George"
+author: "george.westmeijer@umu.se"
 date: "2023-02-15"
 output:
   bookdown::html_document2:
@@ -25,13 +25,13 @@ library(tidyverse)
 
 
 ```{r themes}
-source("/Users/geweaa/Box Sync/Protocols/theme.R")
+source("/Users/gewe0007/Documents/Protocols/theme.R")
 # Ranked in order of abundance
 cols.phylum <- c(
-  "Firmicutes" = "#A2A475",
+  "Bacillota" = "#A2A475",
   "Desulfobacterota" = "#02401B",
-  "Actinobacteriota" = "#D69C4E",
-  "Proteobacteria" = "#972D15",
+  "Actinomycetota" = "#D69C4E",
+  "Pseudomonadota" = "#972D15",
   "Other" = "#899DA4"
   )
 
@@ -77,7 +77,13 @@ cols.euk <- c(
 # GTDB release 207 was used as reference database
 
 seqtab <- read_tsv("ASV_table.tsv", col_types = cols(.default = col_character()))
-gtdb <- read_tsv("ASV_tax_species.tsv", col_types = cols(.default = col_character()))
+gtdb <- read_tsv("ASV_tax_species.tsv", col_types = cols(.default = col_character())) %>%
+  mutate(phylum = case_when(
+    phylum == "Proteobacteria" ~ "Pseudomonadota",
+    phylum == "Actinobacteriota" ~ "Actinomycetota",
+    phylum == "Firmicutes" ~ "Bacillota",
+    .default = phylum
+  ))
 
 # The three samples for COSC-2 are 61, 62, and 63, 64 is negative extraction control
 # Each sample contained two filters that were pooled prior to DNA extraction
@@ -101,13 +107,28 @@ c <- seqtab %>% filter(sample == "P28309_1064") %>% pull(seqid)
 gtdb <- gtdb %>% mutate(taxon = coalesce(genus,family,order,class,phylum,domain)) %>% select(-kingdom)
 ```
 
+```{r read data eukaryotes}
+euk <- read_tsv("eukaryotes/ASV_table.tsv", col_types = cols(.default = col_character(),
+                                                                         count = col_integer())
+                ) %>% filter(sample %in% c("WC-3642-S73-COSC-454F-981R-f1",
+                                           "WC-3642-S74-COSC-454F-981R-f3",
+                                           "WC-3642-S75-COSC-454F-981R-f5"
+                       )) %>% 
+  group_by(sample) %>%
+  mutate(relab = count / sum(count)) %>% ungroup()
+
+protist <- read_tsv("eukaryotes/ASV_tax.tsv", col_types = cols(.default = col_character())) %>%
+  filter(seqid %in% euk$seqid)
+```
 
 
-
-```{r read meta-g}
+```{r read data meta-g}
 # CoverM was used for mapping the trimmed reads to the genomes
-# This file only contains the bins for this project (n = 27)
-coverm <- read_tsv("coverm.tsv", col_types = cols(.default = col_character(), tpm = col_double()))
+# This file only contains the bins for this project (n = 26)
+# MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.10_sub was removed due to its low completeness (61%)
+# TPM was adjusted by 2991888/3000000
+coverm <- read_tsv("coverm.tsv", col_types = cols(.default = col_character(), tpm = col_double())) %>%
+  mutate(tpm = tpm * 1.002711)
 
 # Before running CheckM with the CPR market set, this objected contained 567 genomes
 # After running CheckM with CPR markers 570 genomes
@@ -125,12 +146,18 @@ bintax <- read_tsv("gtdbtk.summary.tsv", show_col_types = F) %>%
   separate(classification, 
            into = c("domain","phylum","class","order","family","genus","species"), 
            sep = ";", fill = "right") %>%
-  mutate(across(everything(), na_if, "")) %>%
+  mutate(across(everything(), \(x) na_if(x, ""))) %>%
   mutate(across(-1, \(x) gsub(x, pattern = "_[A-Z]", replacement = ""))) %>%
   filter(genome %in% coverm$genome) %>% distinct() %>%
   # Remove placeholder names
   mutate(across(2:8, \(x) ifelse(grepl("[0-9]", x), NA, x))) %>%
-  mutate(taxon = coalesce(genus, family, order, class, phylum))
+  mutate(taxon = coalesce(genus, family, order, class, phylum)) %>%
+  mutate(phylum = case_when(
+    phylum == "Proteobacteria" ~ "Pseudomonadota",
+    phylum == "Actinobacteriota" ~ "Actinomycetota",
+    phylum == "Firmicutes" ~ "Bacillota",
+    .default = phylum
+  ))
 ```
 
 
@@ -158,9 +185,42 @@ for (file in list.files("prokka/", full.names = TRUE)) {
 kegg <- read_tsv("keggmapper.tsv", col_types = cols(.default = col_character()))
 ```
 
+```{r add genome names}
+# Taxa are ordered (descending) based on phylum and tpm
+# Only taxa are included with tpm > 10,000 (relative abundance > 1 %)
+# 14 / 27 genomes are included
+names <- coverm %>% 
+  group_by(genome) %>% summarise(tpm = sum(tpm)) %>% 
+  filter(tpm > 10000) %>% inner_join(bintax, by = "genome") %>%
+  arrange(desc(tpm)) %>% pull(genome)
+```
+
+
+```{r crispr}
+checkm <- list(genome = names, crispr = 
+       c(2, #  1
+         2, #  2
+         1, #  3
+         1, #  4
+         1, #  5
+         0, #  6
+         0, #  7
+         2, #  8
+         1, #  9
+         0, # 10
+         0, # 11
+         0, # 12
+         0, # 13
+         1 # 14
+         )) %>% data.frame() %>%
+  right_join(checkm, by = "genome")
+```
+
+
+
 # Extraction control (supplemental)
 
-```{r community with control}
+```{r community with control (16S)}
 seqtab %>%
   inner_join(gtdb, by = "seqid") %>%
   group_by(class, sample) %>%
@@ -173,8 +233,9 @@ seqtab %>%
 
 gtdb %>%
   left_join(t %>% transmute(class, topphylum = class), by = "class") %>%
-  #mutate(topphylum = if_else(is.na(order), "Unidentified", topphylum)) %>%
   replace_na(list("topphylum" = "Other")) -> taxref
+
+i <- c("P28309_1061","P28309_1062","P28309_1063","P28309_1064")
 
 p1 <- seqtab %>%
   filter(sample %in% i) %>%
@@ -232,6 +293,42 @@ p2 <- nmds.scores %>%
            )
 ```
 
+# Rarefaction of 16 & 18S 
+
+Function rarecurve draws a rarefaction curve for each row of the input data. The rarefaction curves are evaluated using the interval of step sample sizes, always including 1 and total sample size. If sample is specified, a vertical line is drawn at sample with horizontal lines for the rarefied species richnesses.
+
+```{r rarefaction, fig.width=12/2.53}
+# Perform the subsampling
+rare <- seqtab %>%
+  # Remove negative control
+  filter(sample != "P28309_1064") %>%
+  rbind(euk) %>%
+  select(-relab) %>%
+  pivot_wider(names_from = "seqid", values_from = "count", values_fill = 0) %>%
+  column_to_rownames("sample") %>%
+  vegan::rarecurve(sample = 10000, step = 100, tidy = TRUE) %>%
+  tibble() %>%
+  rename_with(tolower)
+
+lab <- list(site = unique(rare$site), label = c("16S #1", "16S #2", "16S #3",
+                                                "18S #1", "18S #2", "18S #3")
+            ) %>% data.frame() %>%
+  inner_join(rare, by = "site") %>%
+  group_by(site) %>% slice_max(species) %>% ungroup() %>%
+  mutate(sample = if_else(label == "18S #1", sample - 10000, sample))
+
+# Plot the curve
+p3 <- rare %>%
+  ggplot(aes(sample, species, group = site)) + 
+  geom_line() +
+  geom_label(data = lab, aes(sample, species, label = label), size = 7/.pt) +
+  labs(x = expression('No. of reads (' %*% '1000)'), y = "No. of ASVs") +
+  theme_tidy() + 
+  scale_x_continuous(labels = c("0", "50", "100", "150"), breaks = c(0, 50000, 100000, 150000)) +
+  scale_y_continuous(labels = c("0", "500", "1,000", "1,500"), breaks = c(0, 500, 1000, 1500))
+```
+
+
 
 ```{r combine plots with control, fig.width=18/2.53}
 library(patchwork)
@@ -244,38 +341,90 @@ ggsave("../figures/control.pdf", width = 16, height = 16, units = "cm")
 
 # Field site
 
-```{r plot scandinavia}
+```{r read shapefiles scandinavia}
 # Äspö Lat N 57.4334, Lon E 16.6603) 
 baltic <- list.files("../../Cultures/didactic-spork/data/shapefiles/", pattern = ".shp", full.names = TRUE) %>% lapply(sf::st_read)
 # Use EPSG 3152, unit (m)
+i <- sf::st_read("gadm41_SWE_shp/gadm41_SWE_1.shp")
+baltic[[1]] <- sf::st_simplify(baltic[[1]], dTolerance = 4000)
+baltic[[2]] <- sf::st_simplify(baltic[[2]], dTolerance = 4000)
+baltic[[3]] <- sf::st_make_valid(baltic[[3]])
+baltic[[3]] <- sf::st_simplify(baltic[[3]], dTolerance = 4000)
+baltic[[4]] <- sf::st_make_valid(baltic[[4]])
+baltic[[4]] <- sf::st_simplify(baltic[[4]], dTolerance = 4000)
+baltic[[5]] <- sf::st_simplify(baltic[[5]], dTolerance = 4000)
+baltic[[6]] <- sf::st_simplify(baltic[[6]], dTolerance = 4000)
+baltic[[7]] <- sf::st_simplify(baltic[[7]], dTolerance = 4000)
+baltic[[8]] <- sf::st_simplify(baltic[[8]], dTolerance = 4000)
+baltic[[9]] <- sf::st_make_valid(baltic[[9]])
+baltic[[9]] <- sf::st_simplify(baltic[[9]], dTolerance = 4000)
+baltic[[10]] <- sf::st_make_valid(baltic[[10]])
+baltic[[10]] <- sf::st_simplify(baltic[[10]], dTolerance = 4000)
+baltic[[11]] <- sf::st_simplify(baltic[[11]], dTolerance = 4000)
+
+
+
+baltic[[1]] <- baltic[[1]] %>% sf::st_transform(3152)
+baltic[[2]] <- baltic[[2]] %>% sf::st_transform(3152)
 baltic[[3]] <- baltic[[3]] %>% sf::st_transform(3152)
+baltic[[4]] <- baltic[[4]] %>% sf::st_transform(3152)
+baltic[[5]] <- baltic[[5]] %>% sf::st_transform(3152)
 baltic[[6]] <- baltic[[6]] %>% sf::st_transform(3152)
 baltic[[7]] <- baltic[[7]] %>% sf::st_transform(3152)
+baltic[[8]] <- baltic[[8]] %>% sf::st_transform(3152)
+baltic[[9]] <- baltic[[9]] %>% sf::st_transform(3152)
+baltic[[10]] <- baltic[[10]] %>% sf::st_transform(3152)
+baltic[[11]] <- baltic[[11]] %>% sf::st_transform(3152)
+```
+
+
+```{r plot scandinavia, fig.width=8/2.53, fig.height=10/2.53}
+# the Outokumpu Deep Drill Hole, in eastern Finland, located at latitude 62.71740°N, longitude 29.06528°E.
+# Olkiluoto, Eurajoki, Finland Lat 61.23694444444445 N, Lon 21.440833333333334 E
+
+sites <- list(
+  site = c("COSC-2","Äspö HRL","Outokumpu","Olkiluoto"),
+  x = c(-126835,16227,661319,281650),
+  xplot = c(-126835 + 100000,16227 - 110000,661319-120000,281650 + 100000),
+  y = c(530577,-131493,504347,295776)
+) %>% data.frame()
 
 ggplot() + # x (longitude), y (latitude)
-  geom_sf(data = baltic[[3]], colour = "black", fill = "white", lwd = 0.08) + # Finland
-  geom_sf(data = baltic[[6]], colour = "black", fill = "white", lwd = 0.08) + # Norway
-  geom_sf(data = baltic[[7]], colour = "black", fill = "white", lwd = 0.08) + # Sweden
-  ggspatial::annotation_scale(location = "br") +
-  annotate("rect", xmin = -126780 - 20000, xmax = -126780 + 20000, ymin = 530561 - 20000, ymax = 530561 + 20000, fill = "black" 
-           ) +
-  annotate("text", x = -126780 + 110000, y = 530561, label = "COSC-2", colour = "black", size = 7/.pt) +
-  lims(x = c(-605927, 377430), y = c(-300000, 1172471)) +
+  geom_sf(data = baltic[[1]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[2]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[3]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[4]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[5]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[6]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Finland
+  geom_sf(data = baltic[[7]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Norway
+  geom_sf(data = baltic[[8]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Sweden  
+  geom_sf(data = baltic[[9]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Sweden  
+  geom_sf(data = baltic[[10]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Sweden 
+  geom_sf(data = baltic[[11]], colour = "#000000", fill = "#F7F2EE", lwd = 0.1) + # Sweden  
+  ggspatial::annotation_scale(location = "br", text_cex = 0.6) +
+  geom_point(data = sites, mapping = aes(x = x, y = y),
+             shape = 21, stroke = .5, fill = "#899DA4", colour = "#000000", size = 3
+             ) +
+  geom_label(data = sites, mapping = aes(x = xplot, y = y, label = site),
+            size = 7/.pt, label.size = 0, label.r = unit(0, "mm")) +
+  lims(x = c(-300000, 700000), y = c(-400000, 900000)) +
   labs(x = "", y = "") + 
   theme(
-    panel.grid = element_line(colour = "#D9D9D9", linewidth = 0.4),
-    panel.background = element_blank(),
-    axis.text = element_text(size = 7, color = "black"),
-    axis.ticks = element_blank()
+    plot.margin = margin(),
+    panel.background = element_rect(fill = "#DBE1E3"),
+    panel.grid = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.border = element_rect(fill = "transparent", linewidth = 0.25)
     )
 ```
 
 ```{r export map}
-ggsave("../figures/coscmap.png", width = 12, height = 10, units = "cm")
+ggsave("../figures/map.pdf", width = 10, height = 14, units = "cm")
 ```
 
 
-# Bar plot
+# Bar plot community (phylum)
 
 
 ```{r plot community phylum}
@@ -383,33 +532,39 @@ ggsave("../figures/barplot_euk.pdf", width = 18, height = 12, units = "cm")
 # Visualise stats of genomes (Fig. 3)
 
 
-```{r}
-i <- c("Firmicutes","Desulfobacterota","Actinobacteriota","Proteobacteria","Other")
+```{r plot genome size vs no. genes, fig.width=8/2.53, fig.height=10/2.53}
+i <- c("Bacillota","Desulfobacterota","Actinomycetota","Pseudomonadota","Other")
 # Desulforudis audaxviator GC 0.6085068, genome size 2616697 bp
 library(ggtext)
 
 p1 <- checkm %>%
   inner_join(bintax, by = "genome") %>%
   mutate(phylum = ifelse(phylum %in% i, phylum, "Other")) %>%
-  select(genome, phylum, GC, genome.size) %>%
+  select(genome, phylum, predicted.genes, genome.size) %>%
   distinct() %>%
   mutate(genome.size = genome.size/1e6) %>%
   ggplot(aes(x = genome.size, 
-             y = GC, 
+             y = predicted.genes, 
              color = fct_relevel(phylum,i)
              )) +
   geom_smooth(method = "lm", formula = y ~ x, colour = "black", fill = "#d9d9d9", se = TRUE, linetype = 0) +
   geom_point(size = 2.5, shape = 1, stroke = 1) + 
   annotate("text", x = Inf, y = -Inf, 
-           label = "paste(R ^ 2, \" = 0.06\")", 
+           label = "paste(R ^ 2, \" = 0.96\")", 
            size = 7/.pt, vjust = -0.5, hjust = 1, parse = TRUE) +
-  annotate("richtext", x = 2.8, y = 0.609, 
-           label = "D. audaxviator: 2.6 Mbp", 
-           size = 7/.pt, hjust = 0, label.color = "#A2A475") +
-  labs(x = "Estimated genome size (Mbp)", y = "GC content (%)", color = "") +
-  scale_x_continuous(breaks = c(1,2,3,4,5,6)) +
+  annotate("richtext", x = 2.8, y = 2728, 
+           label = "Ca. D. audaxviator: 2.6 Mbp", 
+           size = 7/.pt, hjust = 0, label.color = "#A2A475",
+           label.padding = unit(c(0.1,0.1,0.1,0.1), "lines")) +
+  annotate("richtext", x = 4.5, y = 6371, 
+           label = "Bradyrhizobium sp.: 6.7 Mbp", 
+           size = 7/.pt, label.color = "#972D15", vjust = 0.5,
+           label.padding = unit(c(0.1,0.1,0.1,0.1), "lines")) +
+  labs(x = "Estimated genome size (Mbp)", y = "No. predicted genes", color = "") +
   scale_color_manual(values = cols.phylum, guide = "none") +
-  theme_tidy() +
+  scale_y_continuous(labels = c("2,000","3,000","4,000","5,000","6,000"),
+                     breaks = c(2000,3000,4000,5000,6000)) +
+  theme_tidy(ratio = 1.2) +
   theme(
     text = element_text(colour = "black"),
     panel.border = element_blank(),
@@ -436,10 +591,10 @@ p2 <- checkm %>%
              colour = phylum, 
              fill = fct_relevel(phylum,i)
              )) +
-  geom_boxplot(alpha = 0.5, key_glyph = "rect") +
-  labs(x = "", y = "Completeness (%)", fill = "") +
+  geom_boxplot(key_glyph = "rect") +
+  labs(x = "", y = "Estimated completeness (%)", fill = "") +
   scale_colour_manual(values = cols.phylum, guide = "none") +
-  scale_fill_manual(values = cols.phylum) +
+  scale_fill_manual(values = alpha(cols.phylum, alpha = 0.5)) +
   theme_tidy(legend = "bottom", ratio = 1.2) +
   theme(
     axis.line = element_line(linewidth = 0.4, "black"),
@@ -448,32 +603,39 @@ p2 <- checkm %>%
     axis.ticks.x = element_blank(),
     legend.key.height = unit(4, "mm"),
     axis.title.y = element_text(margin = margin()),
-    plot.margin = margin()
+    plot.margin = margin(),
+    legend.spacing.x = unit(1, "mm")
   )
 ```
 
 
 ```{r ordination on function metagenomes}
 nmds <- coverm %>%
-  inner_join(emapper, by = "genome") %>% 
-  filter(KEGG_ko != "-") %>% # Filter out NA
-  group_by(genome, KEGG_ko) %>% summarise(tpm = sum(tpm), .groups = "drop") %>%
-  pivot_wider(names_from = "KEGG_ko", values_from = "tpm", values_fill = 0) %>%
+  # Sum the abundance of both coverage per metagenome
+  mutate(abundance = 1) %>% 
+  inner_join(emapper, by = "genome") %>%
+  # Filter out NA and add multiple KOs on new line
+  filter(KEGG_ko != "-") %>% separate_rows(KEGG_ko, sep = ",") %>%
+  # Sum the abundance of each KO within the metagenomes
+  group_by(genome, KEGG_ko) %>% 
+  summarise(abundance = sum(abundance), .groups = "drop") %>%
+  # Pivot to prepare a numerical matrix
+  pivot_wider(names_from = "KEGG_ko", values_from = "abundance", values_fill = 0) %>%
   column_to_rownames("genome") %>%
   vegan::metaMDS()
 
 nmds.scores <- vegan::scores(nmds)$sites %>%
   as.data.frame() %>%
-  rownames_to_column("sample")
+  rownames_to_column("genome")
 ```
 
 
-```{r plot ordination KOs}
+```{r plot ordination KOs, fig.width=8/2.53, fig.height=8/2.53}
 library(ggtext)
-i <- c("Firmicutes","Desulfobacterota","Actinobacteriota","Proteobacteria","Other")
+i <- c("Bacillota","Desulfobacterota","Actinomycetota","Pseudomonadota","Other")
 
 p3 <- nmds.scores %>%
-  rename(genome = sample) %>% inner_join(bintax, by = "genome") %>%
+  inner_join(bintax, by = "genome") %>%
   mutate(phylum = ifelse(phylum %in% i, phylum, "Other")) %>%
   # Plot
   ggplot(aes(x = NMDS1, 
@@ -485,21 +647,20 @@ p3 <- nmds.scores %>%
   geom_point(size = 2.5, shape = 1, stroke = 1) +
   theme_tidy() +
   scale_color_manual(values = cols.phylum, name = "", guide = "none") +
-  annotate('text', x = Inf, y = -Inf, size = 7/.pt,
+  annotate('text', x = -Inf, y = -Inf, size = 7/.pt,
            label = paste('Stress = ', round(nmds$stress, digits = 2)),
-           hjust = 1.05, vjust = -0.5) +
-  annotate("richtext", x = -2.9, y = 3.69, 
+           hjust = -0.1, vjust = -0.5) +
+  annotate("richtext", x = -0.8, y = 1.12, 
            label = "Methanobacteriota", 
            size = 7/.pt, hjust = 0, label.color = "#899DA4", 
            label.padding = unit(c(0.1,0.1,0.1,0.1), "lines")) +
-  annotate("richtext", x = -4.5, y = -2.57, 
-           label = "Bradyrhizobium", 
-           size = 7/.pt, hjust = 0, label.color = "#972D15", 
+  annotate("richtext", x = 0.032, y = 0.25, 
+           label = "Ca. D. audaxviator", 
+           size = 7/.pt, label.color = "#A2A475", 
            label.padding = unit(c(0.1,0.1,0.1,0.1), "lines")) +
   theme(
     axis.title.y = element_text(margin = margin()),
-    panel.background = element_blank(),
-    panel.border = element_rect(linewidth = 0.4, colour = "black")
+    panel.border = element_rect(linewidth = 0.4, colour = "black", fill = NA)
     )
 ```
 
@@ -516,12 +677,12 @@ p1 + p2 + p3 + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a
 ```
 
 
-```{r export bin stats}
+```{r export plot bin stats (fig. 2)}
 ggsave("../figures/binstats.pdf", height = 10, width = 18, units = "cm")
 ```
 
 
-# Heatmap
+# Heatmap metabolic potential
 
 ```{r order taxa}
 # Taxa are ordered (descending) based on phylum and tpm
@@ -555,14 +716,16 @@ emapper %>%
     ec =="4.2.1.120" ~ "19: 4-hydroxybutyryl-CoA dehydratase (abfD)",
     ec == "6.4.1.3"  ~ "20: propionyl-CoA carboxylase (pccB)", # 3-Hydroxypropionate bi-cycle
     # H2 metabolism
+    ec == "1.9.3.1" ~ "21: Cytochrome c oxidase (ctaCDEF)",
     ec == "1.12.1.2" ~ "22: NAD-reducing hydrogenase (hoxfHY)",
     ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "23: NiFe hydrogenase (hydAB, hoxGK)"
   )) %>% 
   # Remove genes outside of above selection
   filter(!is.na(category)) %>%
-  group_by(genome,gene) %>% summarise(n = n()) %>%
-  inner_join(bintax, by = "genome") %>% filter(genome %in% names & n > 1) %>%
-  select(taxon, gene, n, genome)
+  group_by(genome, gene) %>% summarise(n = n(), .groups = "drop") %>%
+  inner_join(bintax, by = "genome") %>% #filter(genome %in% names & n > 1) %>%
+  select(taxon, gene, n, genome) %>%
+  filter(gene != "-" & n > 1)
 ```
 
 
@@ -581,8 +744,8 @@ mg <- emapper %>%
     gene == "soeB" ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
     gene == "sorB" ~ "08: Sulfite dehydrogenase (sorB)",
     # N metabolism
-    ec == "1.18.6.1" ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
-    grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. (nrfAH)", # nrfAH
+    ec == "1.18.6.1" ~ "21: Nitrogen fixation (nifKDH)", # nifKDH
+    grepl("nrf[A,H]", gene) ~ "22: Dissimilatory nitrate red. (nrfAH)", # nrfAH
     # C fixation
     ec ==  "1.2.7.4" ~ "16: CO dehydrogenase (cooS)", # WL pathway 
     ec =="2.3.1.169" ~ "17: Acetyl-CoA synthase (acs)", # WL pathway 
@@ -590,12 +753,13 @@ mg <- emapper %>%
     ec =="4.2.1.120" ~ "19: 4-hydroxybutyryl-CoA dehydratase (abfD)",
     ec == "6.4.1.3"  ~ "20: propionyl-CoA carboxylase (pccB)", # 3-Hydroxypropionate bi-cycle
     # H2 metabolism
-    ec == "1.12.1.2" ~ "22: NAD-reducing hydrogenase (hoxfHY)",
-    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "23: NiFe hydrogenase (hydAB, hoxGK)"
+    ec == "1.9.3.1" ~ "25: Cytochrome c oxidase (ctaCDEF)",
+    ec == "1.12.1.2" ~ "23: NAD-reducing hydrogenase (hoxfHY)",
+    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "24: NiFe hydrogenase (hydAB, hoxGK)"
   )) %>% 
   # Remove genes outside of above selection
   filter(!is.na(category)) %>%
-  inner_join(bintax, by = "genome") %>% filter(genome %in% names) %>%
+  inner_join(bintax, by = "genome") %>% #filter(genome %in% names) %>%
   select(category, genome) %>% mutate(value = 1)
 ```
 
@@ -617,8 +781,8 @@ mg <- prokka %>%
     gene == "soeB" ~ "08: Sulfite dehydrogenase (soeB)", # soeB: soeAC not present
     gene == "sorB" ~ "08: Sulfite dehydrogenase (sorB)",
     # N metabolism
-    ec == "1.18.6.1" ~ "09: Nitrogen fixation (nifKDH)", # nifKDH
-    grepl("nrf[A,H]", gene) ~ "13: Dissimilatory nitrate red. (nrfAH)", # nrfAH
+    ec == "1.18.6.1" ~ "21: Nitrogen fixation (nifKDH)", # nifKDH
+    grepl("nrf[A,H]", gene) ~ "22: Dissimilatory nitrate red. (nrfAH)", # nrfAH
     # C fixation
     ec ==  "1.2.7.4" ~ "16: CO dehydrogenase (cooS)", # WL pathway 
     ec =="2.3.1.169" ~ "17: Acetyl-CoA synthase (acs)", # WL pathway 
@@ -626,8 +790,9 @@ mg <- prokka %>%
     ec =="4.2.1.120" ~ "19: 4-hydroxybutyryl-CoA dehydratase (abfD)",
     ec == "6.4.1.3"  ~ "20: propionyl-CoA carboxylase (pccB)", # 3-Hydroxypropionate bi-cycle
     # H2 metabolism
-    ec == "1.12.1.2" ~ "22: NAD-reducing hydrogenase (hoxfHY)",
-    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "23: NiFe hydrogenase (hydAB, hoxGK)"
+    ec == "1.9.3.1" ~ "25: Cytochrome c oxidase (ctaCDEF)",
+    ec == "1.12.1.2" ~ "23: NAD-reducing hydrogenase (hoxfHY)",
+    ec %in% c("1.12.99.6","1.12.2.1","1.12.7.2") ~ "24: NiFe hydrogenase (hydAB, hoxGK)"
   )) %>%
   # Remove genes outside of above selection
   filter(!is.na(category)) %>%
@@ -682,7 +847,17 @@ p1 <- bintax %>%
     panel.grid.minor = element_line(colour = "white", linewidth = 2)
   )
 
+mg <- checkm %>%
+  filter(genome %in% names) %>%
+  mutate(category = "26: Crispr-CAS") %>%
+  select(genome, category, value = crispr) %>%
+  mutate(value = gsub(2, 1, value)) %>%
+  mutate(order = substr(category, 1, 2)) %>%
+  mutate(category = substr(category, 5, nchar(.))) %>% 
+  rbind(mg) %>% arrange(order)
+
 p2 <- mg %>%
+  filter(genome %in% names) %>%
   mutate(genome = factor(genome, names)) %>%
   mutate(category = factor(category, rev(unique(mg$category)))) %>%
   mutate(value = factor(value, levels = c("1", "0"))) %>%
@@ -828,7 +1003,6 @@ k <- emapper %>%
 
 ```{r plot kegg pathways}
 # Aspect ratio is y / x 
-
 p4 <- k %>%
   # Add taxon names
   inner_join(bintax, by = "genome") %>% filter(genome %in% names) %>%
@@ -851,7 +1025,7 @@ p4 <- k %>%
 ```
 
 
-```{r, fig.width=16/2.53}
+```{r plot fig. 4, fig.width=16/2.53}
 library(patchwork)
 p1 / p2 / p3 / p4 + plot_layout(guides = "collect") & 
   theme(plot.margin = margin(),
@@ -859,28 +1033,14 @@ p1 / p2 / p3 / p4 + plot_layout(guides = "collect") &
         legend.key.height = unit(4, "mm"))
 ```
 
-```{r}
+```{r export fig. 4}
 ggsave("../figures/cmetabolism.pdf", width = 16, height = 18, units = "cm")
 ```
 
 # 18S - eukaryotes
 
-```{r}
-euk <- read_tsv("eukaryotes/ASV_table.tsv", col_types = cols(.default = col_character(),
-                                                                         count = col_integer())
-                ) %>% filter(sample %in% c("WC-3642-S73-COSC-454F-981R-f1",
-                                           "WC-3642-S74-COSC-454F-981R-f3",
-                                           "WC-3642-S75-COSC-454F-981R-f5"
-                       )) %>% 
-  group_by(sample) %>%
-  mutate(relab = count / sum(count)) %>% ungroup()
 
-protist <- read_tsv("eukaryotes/ASV_tax.tsv", col_types = cols(.default = col_character())) %>%
-  filter(seqid %in% euk$seqid)
-```
-
-
-```{r}
+```{r extract most abundant euk. phyla}
 euk %>%
   inner_join(protist, by = "seqid") %>%
   group_by(phylum, sample) %>%
@@ -898,7 +1058,7 @@ protist %>%
 ```
 
 
-```{r}
+```{r plot community based on 18S}
 p3 <- euk %>%
   inner_join(taxref, by = "seqid") %>%
   # Summarize in order to have the sum for each category and topphylum
@@ -925,89 +1085,244 @@ p3 <- euk %>%
 ```
 
 
-# Rarefaction of 16 & 18S 
-
-Function rarecurve draws a rarefaction curve for each row of the input data. The rarefaction curves are evaluated using the interval of step sample sizes, always including 1 and total sample size. If sample is specified, a vertical line is drawn at sample with horizontal lines for the rarefied species richnesses.
-
-```{r rarefaction, fig.width=12/2.53}
-# Perform the subsampling
-rare <- seqtab %>%
-  # Remove negative control
-  filter(sample != "P28309_1064") %>%
-  rbind(euk) %>%
-  select(-relab) %>%
-  pivot_wider(names_from = "seqid", values_from = "count", values_fill = 0) %>%
-  column_to_rownames("sample") %>%
-  vegan::rarecurve(sample = 10000, step = 100, tidy = TRUE) %>%
-  tibble() %>%
-  rename_with(tolower)
-
-lab <- list(site = unique(rare$site), label = c("16S #1", "16S #2", "16S #3",
-                                                "18S #1", "18S #2", "18S #3")
-            ) %>% data.frame() %>%
-  inner_join(rare, by = "site") %>%
-  group_by(site) %>% slice_max(species) %>% ungroup() %>%
-  mutate(sample = if_else(label == "18S #1", sample - 10000, sample))
-
-# Plot the curve
-p3 <- rare %>%
-  ggplot(aes(sample, species, group = site)) + 
-  geom_line() +
-  geom_label(data = lab, aes(sample, species, label = label), size = 7/.pt) +
-  labs(x = expression('No. of reads (' %*% '1000)'), y = "No. of ASVs") +
-  theme_tidy() + 
-  scale_x_continuous(labels = c("0", "50", "100", "150"), breaks = c(0, 50000, 100000, 150000)) +
-  scale_y_continuous(labels = c("0", "500", "1,000", "1,500"), breaks = c(0, 500, 1000, 1500))
-```
-
-
 # Heat map D. audaxviator
 
-```{r}
-ani <- read_tsv("salida_matrix.txt", col_names = F, col_select = 1:3) %>%
-  rename(x = X1, y = X2, ani = X3) %>%
-  mutate(ani = round(ani, digits = 1))
+```{r read and plot ani}
+ani <- read_tsv("audaxviator_ani.tsv", 
+                col_types = cols(.default = col_character(), ani = col_double()
+                                 ))
 
-y.lab <- c("Sweden (this study)", 
-           "Sweden (this study)",
-           "Russia (Kadnikov et al. 2018)",
-           "South Africa (Magnabosco et al. 2015)",
-           "South Africa (Chivian et al. 2008)", 
-           "South Africa (Lau et al. 2016)", 
-           "South Africa (Lau et al. 2014)", 
-           "South Africa (Lau et al. 2014)", 
-           "South Africa (Lau et al. 2016)", 
-           "South Africa (Lau et al. 2016)")
+ref <- c("MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7.fa" = "Sweden (F307, this study)", 
+         "MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.13.fa" = "Sweden (F513, this study)",
+         "SoB1_SRR13164376.23.fa" = "SA (SOB1, Lau et al. 2014)", 
+         "SoB2_SRR13164375.35.fa" = "SA (SOB2, Lau et al. 2014)",
+         "SoW10_SRR5011273.55.fa" = "SA (SOW10, Lau et al. 2016)",
+         "SoW11_SRR5011275.16.fa" = "SA (SOW11, Lau et al. 2016)",
+         "SoW12_SRR5011277.1.fa"  = "SA (SOW12, Lau et al. 2016)",
+         "SoTa7_SRR1633224.15.fa" = "SA (SOTA7, Magnabosco et al. 2015)",
+         "SoMp_SAG_Desulforudis_audaxviator_MP104C.fa" = "SA (SOMP, Chivian et al. 2008)",
+         "RT3_SRR7102746.45.fa" = "Russia (Kadnikov et al. 2018)") 
+           
 
-x.lab <- c("Sweden (this study)",
-           "Sweden (this study)",
-           "South Africa (Lau et al. 2014)",
-           "South Africa (Lau et al. 2016)", 
-           "South Africa (Lau et al. 2014)",
-           "South Africa (Lau et al. 2016)", 
-           "South Africa (Lau et al. 2016)", 
-           "South Africa (Magnabosco et al. 2015)",
-           "Russia (Kadnikov et al. 2018)",
-           "South Africa (Chivian et al. 2008)"
-           )
-
-ani %>% 
+ani <- ani %>%
+  # Replace the bin names with a shorter reference, based on the named vector
+  mutate(x = ref[as.character(x)]) %>%
+  mutate(y = ref[as.character(y)]) %>%
   pivot_wider(names_from = "y", values_from = "ani") %>%
   column_to_rownames("x") %>%
   pheatmap::pheatmap(
-    color = colorRampPalette(c("#F0F1EB","#6A6A5A"))(100),
+    color = colorRampPalette(c("#F0F1EB","#5C5C4E"))(6),
     cluster_cols = FALSE,
     border_color = "white",
     cellwidth = 20, cellheight = 20,
-    treeheight_row = 20,
+    treeheight_row = 25,
     drop_levels = TRUE,
-    labels_row = x.lab, labels_col = y.lab,
     legend_breaks = c(98.5, 99, 99.5, 100),
     legend_labels = c("98.5 %", "99 %", "99.5 %", "100 %"),
     fontsize = 7,
     display_numbers = TRUE, fontsize_number = 7, number_format = "%g", number_color = "black",
-    width = 14/2.53, height = 14/2.53,
-    filename = "../figures/ani.pdf"
+    width = 18/2.53, height = 16/2.53
   )
+```
+
+
+# Metabolic weight
+
+```{r read metabolic weight}
+# Taxa are ordered (descending) based on phylum and tpm
+# Only taxa are included with tpm > 10,000 (relative abundance > 1 %)
+# 14 / 27 genomes are included
+names <- coverm %>% 
+  group_by(genome) %>% summarise(tpm = sum(tpm)) %>% 
+  filter(tpm > 10000) %>% inner_join(bintax, by = "genome") %>%
+  arrange(desc(tpm)) %>% pull(genome)
+
+t <- c(
+  "Organic carbon oxidation - CO oxidation",
+  "Organic carbon oxidation - fatty acid degradation",
+  "Organic carbon oxidation - formate oxidation",
+  "Organic carbon oxidation - methanol oxidation",
+  "Carbon fixation - CBB cycle (Rubisco)",
+  "Carbon fixation - Wood-Ljungdahl pathway",
+  "Hydrogen generation",
+  "Fermentation",
+  "Hydrogen oxidation",
+  "N2 fixation - nifDK||vnfDKG||nifH",
+  "Iron reduction",
+  "Sulfide oxidation - sqr",
+  "Sulfur oxidation - sdo",
+  "Sulfite oxidation",
+  "Sulfate reduction",
+  "Sulfite reduction - dsrABD",
+  "Thiosulfate oxidation",
+  "Thiosulfate disproportionation (to sulfite + hydrogen sulfide)"
+) %>% rev()
+
+mw <- read_tsv("metabolicweight.tsv", 
+               col_types = cols(.default = col_character(), mw = col_double()
+                                )) %>%
+  mutate(pathway = substr(.$pathway, 8, nchar(.))) %>%
+  filter(genome %in% names | genome == "general")
+```
+
+
+```{r add phylum to molecular weight as subplot}
+p1 <- bintax %>%
+  # Use subset of bins
+  filter(genome %in% names) %>%
+  mutate(genome = factor(genome, names)) %>%
+  mutate(taxonomy = "Taxonomy") %>%
+  # Only most abundant phyla
+  mutate(phylum = if_else(phylum %in% names(cols.phylum), phylum, "Other")) %>%
+  # Plot
+  ggplot(aes(genome, 
+             taxonomy, 
+             fill = fct_relevel(phylum, names(cols.phylum))
+             )) +
+  geom_tile(colour = "white") +
+  labs(x = "", y = "", fill = "") +
+  scale_fill_manual(values = cols.phylum) +
+  scale_x_discrete(position = "top", labels = taxlab) + 
+  theme_tidy(ratio = NULL) +
+  coord_equal() +
+  theme(
+    legend.spacing.x = unit(0, "mm"),
+    legend.key.height = unit(4, "mm"),
+    legend.key.width = unit(4, "mm"),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(angle = 90, hjust = 0),
+    axis.text.y = element_blank(),
+    panel.border = element_rect(linewidth = 1,fill = NA)
+  )
+```
+
+
+
+
+```{r plot metabolic weight}
+y.lab <- t %>%
+  gsub("Organic","Org.",.) %>%
+  gsub("oxidation","ox.",.) %>%
+  gsub("reduction","red.",.) %>%
+  gsub("[()]","",.) %>%
+  gsub(" to sulfite \\+ hydrogen sulfide","",.) %>%
+  gsub("disproportionation","dispr.",.) %>%
+  gsub("carbon","C",.) %>%
+  gsub("Carbon","C",.) %>%
+  gsub("fixation","fix.",.) %>%
+  gsub(" pathway","",.) %>%
+  gsub("nifDK\\|\\|vnfDKG\\|\\|nifH","nifDHK",.) %>%
+  gsub("degradation","degr.",.) %>%
+  gsub(" -", ":",.)
+
+p2 <- mw %>%
+  inner_join(bintax, by = "genome") %>%
+  # Order the genomes
+  mutate(genome = factor(genome, names)) %>%
+  # Filter out pathways
+  #filter(pathway %in% t) %>%
+  #mutate(pathway = factor(pathway, levels = t)) %>%
+  # Plot
+  ggplot(aes(genome, pathway)) +
+  geom_point(aes(size = mw), shape = 21, stroke = 0.5, fill = "white") +
+  theme_tidy(ratio = 1.5) +
+  scale_x_discrete(labels = taxlab, position = "top") +
+  #scale_y_discrete(labels = y.lab) +
+  labs(x = "", y = "", size = "Metabolic\nweight score") +
+  theme(
+    legend.spacing.x = unit(0, "mm"),
+    legend.box.margin = margin(),
+    panel.border = element_rect(linewidth = 1,fill = NA),
+    axis.ticks = element_blank(),
+    axis.text.x.top = element_text(angle = 90),
+    panel.grid.major = element_line(linewidth = 0.1, color = "#BDBDBD")
+  )
+```
+
+
+```{r plot combine mw with phylum}
+library(patchwork)
+p1 + p2 + plot_layout(nrow = 2, guides = "collect") & 
+  theme(plot.margin = margin(),
+        legend.margin = margin(0,0,0,-4))
+```
+
+```{r export supplemental fig. 3}
+ggsave("../figures/mw.pdf", width = 12, height = 18, units = "cm")
+```
+
+
+# Chemistry - including Äspö
+
+```{r plot groundwater chemistry, fig.width=12/2.53, fig.height=10/2.53}
+chem <- read_tsv("../data/hydrochemistry.txt") %>%
+  select(borehole = replicate, Mg, Br, Cl) %>%
+  mutate(origin = case_when(
+    borehole %in% c("SA1730A-1","KA1755A-3","SA2600A-1","KA2862A-1") ~ "Äspö: saline",
+    borehole == "COSC" ~ "COSC-2",
+    borehole == "KR0015B" ~ "Äspö: meteoric",
+    grepl("Outokumpu", borehole) ~ "Outokumpu",
+    grepl("KFM", borehole) ~ "Forsmark: glacial",
+    .default = "Äspö: marine"
+  )) %>%
+  mutate(ratio = (Cl/Br)*2.253992)
+
+cols.gw <- c(
+  "COSC-2" = "#972D15",
+  "Äspö: meteoric" = "#02401B",
+  "Äspö: marine" = "#D69C4E",
+  "Äspö: saline" = "#899DA4",
+  "Outokumpu" = "#046C9A",
+  "Forsmark: glacial" = "#FAEFD1"
+  )
+
+p1 <- chem %>%
+  # Plot
+  ggplot(aes(Cl, ratio, fill = fct_relevel(origin, names(cols.gw)))) +
+  geom_point(size = 3, shape = 21, stroke = 0.3) +
+  theme_tidy() +
+  scale_x_continuous(labels = c("0","4,000","8,000","12,000","16,000")) +
+  scale_fill_manual(values = cols.gw) +
+  labs(x = expression(Cl~(mg~L^{-1})),
+       y = "Mass ratio chloride:bromide",
+       fill = ""
+       ) +
+  theme(
+    panel.border = element_rect(fill = NA, linewidth = 1, color = "#000000")
+    )
+```
+
+```{r plot Cl versus Mg groundwaters}
+p2 <- chem %>%
+  # Plot
+  ggplot(aes(Cl, Cl/Mg, fill = fct_relevel(origin, names(cols.gw)))) +
+  geom_point(size = 3, shape = 21, stroke = 0.3) +
+  theme_tidy() +
+  scale_x_continuous(labels = c("0","4,000","8,000","12,000","16,000")) +
+  scale_fill_manual(values = cols.gw) +
+  labs(x = expression(Cl~(mg~L^{-1})),
+       y = expression(Mg~(mg~L^{-1})),
+       fill = ""
+       ) +
+  theme(
+    panel.border = element_rect(fill = NA, linewidth = 1, color = "#000000")
+    )
+```
+
+
+```{r plot supplemental fig. 1}
+library(patchwork)
+p1 + p2 + plot_layout(guides = "collect") + plot_annotation(tag_levels = c("a","b")) +
+  theme(
+    plot.tag = element_text(size = 8, face = "bold"),
+    plot.tag.position = c(0.15,1.0)
+  )
+```
+
+
+
+```{r export supplemental figure 1}
+ggsave("../figures/groundwaters.pdf", width = 18, height = 8, units = "cm")
 ```
 
