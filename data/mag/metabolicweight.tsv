@@ -1,0 +1,266 @@
+pathway	genome	mw
+Organic carbon oxidation - CO oxidation	general	0.9
+Organic carbon oxidation - CO oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	12.5
+Organic carbon oxidation - CO oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.019_sub	1.5
+Organic carbon oxidation - CO oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	75.8
+Organic carbon oxidation - CO oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	1.3
+Organic carbon oxidation - CO oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	8.9
+Organic carbon oxidation - amino acid utilization	general	6.6
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	1.1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.6
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.019_sub	0.2
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11	0.5
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.3_sub	0.1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.6
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.9	1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	9.9
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.16_sub	0.1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.17	0.1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.5
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.19	0.1
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	0.2
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	0.3
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	75.4
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	0.2
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	1.2
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.2
+Organic carbon oxidation - amino acid utilization	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+Organic carbon oxidation - aromatics degradation	general	6.4
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	1.1
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.7
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.2
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.6
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.3
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.17	0.1
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	77.9
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	1.3
+Organic carbon oxidation - aromatics degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.2
+Organic carbon oxidation - complex carbon degradation	general	5.6
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	1.2
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.9
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.019_sub	0.2
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11	0.6
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.3_sub	0.1
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	3
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.9	1.2
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.16_sub	0.2
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.17	0.1
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.19	0.1
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	0.2
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	0.3
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	87.9
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	0.2
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.4
+Organic carbon oxidation - complex carbon degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.7
+Organic carbon oxidation - fatty acid degradation	general	0.6
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	12
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	18.5
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	35
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-3_S22_L002.24	0.1
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.9	11.4
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.16_sub	1.5
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	1.8
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	13.2
+Organic carbon oxidation - fatty acid degradation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	6.5
+Organic carbon oxidation - formaldehyde oxidation	general	0.2
+Organic carbon oxidation - formaldehyde oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	34.9
+Organic carbon oxidation - formaldehyde oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	53.9
+Organic carbon oxidation - formaldehyde oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	1.8
+Organic carbon oxidation - formaldehyde oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.1
+Organic carbon oxidation - formaldehyde oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.17	4.2
+Organic carbon oxidation - formaldehyde oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	5.2
+Organic carbon oxidation - formate oxidation	general	6.3
+Organic carbon oxidation - formate oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.7
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.2
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.7
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.3
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	78.4
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	1.3
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.2
+Organic carbon oxidation - formate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+Organic carbon oxidation - methanol oxidation	general	0.1
+Organic carbon oxidation - methanol oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	99.7
+Organic carbon oxidation - methanol oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.3
+Carbon fixation - CBB cycle (Rubisco)	general	0.1
+Carbon fixation - CBB cycle (Rubisco)	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	100
+Carbon fixation - Wood-Ljungdahl pathway	general	5.9
+Carbon fixation - Wood-Ljungdahl pathway	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Carbon fixation - Wood-Ljungdahl pathway	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.9
+Carbon fixation - Wood-Ljungdahl pathway	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	11.2
+Carbon fixation - Wood-Ljungdahl pathway	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Carbon fixation - Wood-Ljungdahl pathway	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	84.6
+Carbon fixation - Wood-Ljungdahl pathway	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+Ethanol oxidation	general	5.3
+Ethanol oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	1.3
+Ethanol oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	2
+Ethanol oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	3.2
+Ethanol oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	0.2
+Ethanol oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	93.1
+Ethanol oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	0.2
+Acetate oxidation	general	6.3
+Acetate oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	1.1
+Acetate oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.7
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.2
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.6
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.3
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.17	0.1
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	78.2
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	0.2
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	1.3
+Acetate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+Hydrogen generation	general	6.3
+Hydrogen generation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.019_sub	0.2
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.2
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11	0.6
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.7
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.9	1.1
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.4
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.16_sub	0.1
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.19	0.1
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	0.2
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	79
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.2
+Hydrogen generation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+Fermentation	general	6.6
+Fermentation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	1.1
+Fermentation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.6
+Fermentation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.019_sub	0.2
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.1
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11	0.5
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.3_sub	0.1
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.6
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.9	1
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	9.9
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.16_sub	0.1
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.17	0.1
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.5
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.19	0.1
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	0.2
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	0.3
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	75.4
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	0.2
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	1.2
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.2
+Fermentation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+Methanogenesis	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	100
+Methanotrophy	general	0.3
+Methanotrophy	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	25.5
+Methanotrophy	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	39.5
+Methanotrophy	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.1
+Methanotrophy	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.19	2.4
+Methanotrophy	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	4.2
+Methanotrophy	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	28.2
+Hydrogen oxidation	general	6.2
+Hydrogen oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.7
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.3
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.7
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.5
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	79.3
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	1.3
+Hydrogen oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+N2 fixation - nifDK||vnfDKG||nifH	general	5.2
+N2 fixation - nifDK||vnfDKG||nifH	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	0.1
+N2 fixation - nifDK||vnfDKG||nifH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	3.2
+N2 fixation - nifDK||vnfDKG||nifH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.7
+N2 fixation - nifDK||vnfDKG||nifH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	96
+Nitrate reduction - napAB	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	100
+Nitrate reduction - narGH	general	0.2
+Nitrate reduction - narGH	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	33.1
+Nitrate reduction - narGH	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	51.1
+Nitrate reduction - narGH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.3_sub	3
+Nitrate reduction - narGH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	7.9
+Nitrate reduction - narGH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	4.9
+Nitrite reduction - nirKS	general	0.1
+Nitrite reduction - nirKS	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	74.9
+Nitrite reduction - nirKS	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.3
+Nitrite reduction - nirKS	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.3_sub	6.8
+Nitrite reduction - nirKS	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	18
+Nitrite ammonification - nirBD	general	0.2
+Nitrite ammonification - nirBD	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	35.9
+Nitrite ammonification - nirBD	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	55.5
+Nitrite ammonification - nirBD	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	8.6
+Nitrite ammonification - nrfADH	general	6.1
+Nitrite ammonification - nrfADH	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.019_sub	0.2
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.4
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.3_sub	0.1
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.8
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.16_sub	0.1
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	0.3
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	81.9
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	1.3
+Nitrite ammonification - nrfADH	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.3
+Iron reduction	general	0.5
+Iron reduction	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	13.2
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	38.7
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.1
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.16_sub	1.7
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.17	1.6
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	2.2
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.24	3.2
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	2
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.11	15.5
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	14.6
+Iron reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	7.2
+Iron oxidation:	general	0.1
+Iron oxidation:	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	86.8
+Iron oxidation:	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.019_sub	10.1
+Iron oxidation:	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-1_S20_L002.28	2.8
+Iron oxidation:	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.2
+Arsenate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	100
+Selenate reduction	general	1
+Selenate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	20.2
+Selenate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.11	3.6
+Selenate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.9	6.5
+Selenate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	64.8
+Selenate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.22	1.1
+Selenate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	3.8
+Sulfide oxidation - sqr	general	0.1
+Sulfide oxidation - sqr	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	99.6
+Sulfide oxidation - sqr	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.4
+Sulfur oxidation - sdo	general	6.4
+Sulfur oxidation - sdo	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f1_S23_L002.016	1.1
+Sulfur oxidation - sdo	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	1.7
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.2
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.6
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.9	1
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.2
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	77.6
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.8	0.2
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.2	1.2
+Sulfur oxidation - sdo	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f5_S31_L002.5	0.6
+Sulfite oxidation	general	5.2
+Sulfite oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	3.3
+Sulfite oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.7
+Sulfite oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	96.1
+Sulfate reduction	general	5.2
+Sulfate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	3.3
+Sulfate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.7
+Sulfate reduction	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	96.1
+Sulfite reduction - asrABC	MEGAHIT-MaxBin2Refined-VK-3516-media-gw-oil-b_S38_L002.006_sub	50
+Sulfite reduction - asrABC	MEGAHIT-MetaBAT2Refined-VK-3516-methanol-a_S14_L002.1	50
+Sulfite reduction - dsrABD	general	6
+Sulfite reduction - dsrABD	MEGAHIT-MetaBAT2Refined-VK-3516-KFM24-2_S21_L002.12	3.4
+Sulfite reduction - dsrABD	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f1_S23_L002.6	2.8
+Sulfite reduction - dsrABD	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.13	10.9
+Sulfite reduction - dsrABD	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	0.6
+Sulfite reduction - dsrABD	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.7	82.4
+Thiosulfate oxidation	general	0.1
+Thiosulfate oxidation	MEGAHIT-MaxBin2Refined-VK-3516-cosc-f3_S30_L002.014	99.7
+Thiosulfate oxidation	MEGAHIT-MetaBAT2Refined-VK-3516-SA1420-SRM-a_S42_L002.7_sub	0.3
+Thiosulfate disproportionation (to sulfite + hydrogen sulfide)	MEGAHIT-MetaBAT2Refined-VK-3516-cosc-f3_S30_L002.18_sub	100

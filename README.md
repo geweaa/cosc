@@ -1,2 +1,6 @@
 # cosc
-Microbiology of the COSC-2 borehole using metagenomes and marker genes (16S and 18S)
+Microbiology of the COSC-2 borehole using metagenomes and marker genes (16S and 18S). All processed sequence data are in the data directory, with the files of the marker genes and metagenomes in the ampliseq and mag subdirectories, respectively. For the 16S data, there is the ASV table (```ASV_table.tsv.gz```) and the corresponding taxonomy (```ASV_tax_species.tsv.gz```). Similarly, the 18S data is composed of the ASV table (```ASV_table_454F.tsv.gz```) and the taxonomy of the ASVs (```ASV_tax_454F.tsv.gz```).
+
+The taxonomy of the metagenome-assembled genomes can be found in ```gtdbtk.summary.tsv.gz```. Both Prokka and eggNOG-mapper were used for functional annotation, and these files were included as ```prokka.tsv.gz``` and ```emapper.tsv.gz```, respectively. The output of the read mapping is in ```coverm.tsv.gz``` and the output of CheckM can be found in ```bin-stats-checkm.tsv.gz```. Additional files required to run the ```cosc.Rmd``` are the output of the module completeness ```keggmapper.tsv.gz```, the output of METABOLIC-c (```metabolicweight.tsv```), and the ANI comparison (```audaxviator_ani.tsv```).
+
+The article can be found here: https://doi.org/10.1038/s42003-024-07027-2. The DOI of the corresponding Zenodo repository is 10.5281/zenodo.13871643.
